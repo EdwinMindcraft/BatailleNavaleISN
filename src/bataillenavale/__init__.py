@@ -1,7 +1,5 @@
 import pygame
-import engine
-from pygame.locals import *
-
+from pygame.constants import *
 
 pygame.init()
 
@@ -20,5 +18,5 @@ while not should_close:
         if event.type == QUIT:
             should_close = True
         elif event.type == MOUSEBUTTONUP and event.button == 1:
-            print ("Foo")
+            print ("Ka")
     continue
