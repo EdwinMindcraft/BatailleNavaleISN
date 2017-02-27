@@ -1,13 +1,17 @@
 import pygame
+import engine
 from pygame.locals import *
 
 
 pygame.init()
-window = pygame.display.set_mode((400, 400), RESIZABLE)
+
+window = pygame.display.set_mode((400, 800))
+pygame.display.set_caption("Bataille Navale")
 
 should_close = False
 
 bg = pygame.image.load("mer.jpg").convert()
+bg = pygame.transform.scale(bg, window.get_size())
 window.blit(bg, (0, 0))
 
 while not should_close:
@@ -15,4 +19,6 @@ while not should_close:
     for event in pygame.event.get():
         if event.type == QUIT:
             should_close = True
+        elif event.type == MOUSEBUTTONUP and event.button == 1:
+            print ("Foo")
     continue
