@@ -21,6 +21,9 @@ class Game():
         else:
             return NULL
     
+    def set_grid_size(self, size):
+        self.grid_scale = size
+    
     def cycle_rotation(self):
         if (self.rotation == DIRECTION_DOWN):
             self.rotation = DIRECTION_LEFT
@@ -37,10 +40,10 @@ class Game():
     
     def render_snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
-        return floor(num / size) * size
+        return int(floor(num / size) * size)
     
     def cube_size(self):
-        return self.grid_scale / (11 if self.enable_borders else 10)
+        return int(self.grid_scale / (11 if self.enable_borders else 10))
     
     def can_place_boat(self, boat_type, mouse_x, mouse_y):
         x = self.snap(mouse_x)
