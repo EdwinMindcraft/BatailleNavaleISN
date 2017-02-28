@@ -8,6 +8,7 @@ render_offset = (10, 10)
 grid_size = 500
 pygame.init()
 instance = game.Game(grid_size)
+instance.enable_borders = False
 
 grid_size = instance.cube_size() * (11 if instance.enable_borders else 10)
 instance.set_grid_size(grid_size)
@@ -20,9 +21,9 @@ should_close = False
 bg = pygame.image.load("mer.jpg").convert()
 bg = pygame.transform.scale(bg, window.get_size())
 
-
-line_vert = pygame.surface.Surface((1, instance.cube_size() * 11))
-line_hori = pygame.surface.Surface((instance.cube_size() * 11, 1))
+size = (11 if instance.enable_borders else 10)
+line_vert = pygame.surface.Surface((1, instance.cube_size() * size))
+line_hori = pygame.surface.Surface((instance.cube_size() * size, 1))
 
 while not should_close:
     window.blit(bg, (0, 0))
