@@ -1,9 +1,11 @@
 import pygame
 from pygame.constants import *
 
+grid_size = 400
+
 pygame.init()
 
-window = pygame.display.set_mode((400, 800))
+window = pygame.display.set_mode((grid_size, grid_size * 2))
 pygame.display.set_caption("Bataille Navale")
 
 should_close = False
