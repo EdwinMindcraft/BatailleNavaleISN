@@ -5,9 +5,9 @@ grid_size = 400
 
 pygame.init()
 
-window = pygame.display.set_mode((grid_size, grid_size * 2))
+window = pygame.display.set_mode((grid_size * 2, grid_size))
 pygame.display.set_caption("Bataille Navale")
-
+pygame.display.set_icon(pygame.image.load("bato.jpg"))
 should_close = False
 
 bg = pygame.image.load("mer.jpg").convert()
@@ -23,7 +23,7 @@ while not should_close:
         if event.type == QUIT:
             should_close = True
         elif event.type == MOUSEBUTTONUP and event.button == 1:
-            #Lors d'un clic gauche...
-            print ("")
+            print ("Missed")
     
-    pygame.display.flip()
+    pygame.display.flip() 
+
