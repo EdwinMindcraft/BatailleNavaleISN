@@ -1,13 +1,14 @@
 from bataillenavale import engine
 from bataillenavale.engine import DIRECTION_DOWN, PLAYER_1, PLAYER_2, NULL,\
-    DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT
+    DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT, Rules
 from math import floor
 
 class Game():
-    def __init__(self, grid_scale, enable_borders = True):
+    def __init__(self, grid_scale, enable_borders = True, rules = Rules()):
         self.rotation = DIRECTION_DOWN
-        self.player_1 = engine.Player()
-        self.player_2 = engine.Player()
+        self.rules = rules
+        self.player_1 = engine.Player(rules)
+        self.player_2 = engine.Player(rules)
         self.turn = engine.PLAYER_1
         self.grid_scale = grid_scale
         self.enable_borders = enable_borders
@@ -36,7 +37,10 @@ class Game():
     
     def render_snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
-        return floor(num / size) * size       
+        return floor(num / size) * size
+    
+    def cube_size(self):
+        return self.grid_scale / (11 if self.enable_borders else 10)
     
     def can_place_boat(self, boat_type, mouse_x, mouse_y):
         x = self.snap(mouse_x)

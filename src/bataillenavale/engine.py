@@ -23,7 +23,7 @@ class Rules():
         self.submarine_count = 1
         self.destroyer_count = 1
     
-    def set_boat_count(self, boat_type, count):
+    def set_boat_limit(self, boat_type, count):
         if (boat_type == BOAT_CARRIER):
             self.carrier_count = count
         elif (boat_type == BOAT_BATTLESHIP):
@@ -34,6 +34,20 @@ class Rules():
             self.submarine_count = count
         elif (boat_type == BOAT_DESTROYER):
             self.destroyer_count = count
+    
+    def get_boat_limit(self, boat_type):
+        if (boat_type == BOAT_CARRIER):
+            return self.carrier_count
+        elif (boat_type == BOAT_BATTLESHIP):
+            return self.battleship_count
+        elif (boat_type == BOAT_CRUISER):
+            return self.cruiser_count
+        elif (boat_type == BOAT_SUBMARINE):
+            return self.submarine_count
+        elif (boat_type == BOAT_DESTROYER):
+            return self.destroyer_count
+        else:
+            return 0
 
 class Player():
     
@@ -92,7 +106,23 @@ class Player():
             target = (position[0] + (x_offset * i), position[1] + (y_offset * i))
             self.grid[target[0]][target[1]] = BOAT
     
+    def get_boat_count(self, boat_type):
+        if (boat_type == BOAT_CARRIER):
+            return self.carrier_placed
+        elif (boat_type == BOAT_BATTLESHIP):
+            return self.battleship_placed
+        elif (boat_type == BOAT_CRUISER):
+            return self.cruiser_placed
+        elif (boat_type == BOAT_SUBMARINE):
+            return self.submarine_placed
+        elif (boat_type == BOAT_DESTROYER):
+            return self.destroyer_placed
+        else:
+            return 0
+        
     def can_place_boat_at(self, position, boat_type, direction):
+        if (self.rules.get_boat_limit() >= self.get_boat_count(boat_type)):
+            return False
         size = 0
         if boat_type == BOAT_CARRIER:
             size = 5
