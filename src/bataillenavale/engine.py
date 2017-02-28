@@ -90,7 +90,6 @@ class Player():
                 return False
         return True
     
-    
     def can_place_at(self, position):
         if len(position) != 2:
             return False
@@ -99,7 +98,6 @@ class Player():
         if position[1] < 0 or position[1] > 9:
             return False
         return self.grid[position[0]][position[1]] == NULL
-
     
     def attack(self, other, position = (0, 0)):
         if len(position) != 2:
