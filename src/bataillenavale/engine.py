@@ -12,10 +12,32 @@ BOAT_BATTLESHIP = (10) #Croiseur (4 cases)
 BOAT_CRUISER = (11) #Contre-Torpilleur (3 cases)
 BOAT_SUBMARINE = (12) #Sous-Marin (3 cases)
 BOAT_DESTROYER = (13) #Torpilleur (2 cases)
+PLAYER_1 = (14)
+PLAYER_2 = (15)
+
+class Rules():
+    def __init__(self):
+        self.carrier_count = 1
+        self.battleship_count = 1
+        self.cruiser_count = 1
+        self.submarine_count = 1
+        self.destroyer_count = 1
+    
+    def set_boat_count(self, boat_type, count):
+        if (boat_type == BOAT_CARRIER):
+            self.carrier_count = count
+        elif (boat_type == BOAT_BATTLESHIP):
+            self.battleship_count = count
+        elif (boat_type == BOAT_CRUISER):
+            self.cruiser_count = count
+        elif (boat_type == BOAT_SUBMARINE):
+            self.submarine_count = count
+        elif (boat_type == BOAT_DESTROYER):
+            self.destroyer_count = count
 
 class Player():
     
-    def __init__(self): 
+    def __init__(self, rules = Rules()):
         self.grid = [[NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL],
                 [NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL],
                 [NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL],
@@ -36,6 +58,12 @@ class Player():
                 [NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL],
                 [NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL],
                 [NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL]]
+        self.rules = rules
+        self.carrier_placed = 0
+        self.battleship_placed = 0
+        self.cruiser_placed = 0
+        self.submarine_placed = 0
+        self.destroyer_placed = 0
         
     def place_boat(self, position, boat_type, direction):
         if not self.can_place_boat_at(position, boat_type, direction):
@@ -120,3 +148,10 @@ class Player():
             return HIT_SUCCESS
         else:
             return HIT_MISS
+    
+    def has_boat_left(self):
+        for x in range(len(self.grid)):
+            for y in range(len(self.grid[x])):
+                if self.grid[x][y] == BOAT:
+                    return True
+        return False
