@@ -40,7 +40,7 @@ while not should_close:
     
     pygame.display.flip() 
 
-
+pygame.quit()
 
 #carrier = pygame.image.load("carrier.jpg").convert_alpha()
 #carrier = pygame.transform.scale(carrier, (200, 40))
