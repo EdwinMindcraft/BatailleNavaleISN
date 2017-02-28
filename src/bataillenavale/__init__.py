@@ -9,7 +9,7 @@ grid_size = 500
 pygame.init()
 instance = game.Game(grid_size)
 
-grid_size = instance.cube_size() * 11
+grid_size = instance.cube_size() * (11 if instance.enable_borders else 10)
 instance.set_grid_size(grid_size)
 
 window = pygame.display.set_mode((render_offset[0] * 4 + grid_size * 2, render_offset[1] * 2 + grid_size))
