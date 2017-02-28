@@ -5,22 +5,38 @@ from bataillenavale import engine
 
 render_offset = (10, 10)
 
+#Ordre de taille de la grille.
 grid_size = 500
+#Initialisation de pygame
 pygame.init()
-instance = game.Game(grid_size)
-instance.enable_borders = False
 
+#Regles
+rules = engine.Rules()
+
+#Creation de l'instance du jeu
+instance = game.Game(grid_size, rules=rules)
+
+#Calcul de la taille de la grille
 grid_size = instance.cube_size() * (11 if instance.enable_borders else 10)
+#Dire au jeu que la grille fait grid_size
 instance.set_grid_size(grid_size)
 
+#Creation de la fenetre
 window = pygame.display.set_mode((render_offset[0] * 4 + grid_size * 2, render_offset[1] * 2 + grid_size))
+#On nomme la fenetre
 pygame.display.set_caption("Bataille Navale")
+#On y met une icone
 pygame.display.set_icon(pygame.image.load("bato.jpg"))
+
+#Variable de fermeture
 should_close = False
 
+#On charge l'arriere plan.
 bg = pygame.image.load("mer.jpg").convert()
+#On lui donne la taille de la fenetre
 bg = pygame.transform.scale(bg, window.get_size())
 
+#On calcule le nombre de case
 size = (11 if instance.enable_borders else 10)
 line_vert = pygame.surface.Surface((1, instance.cube_size() * size))
 line_hori = pygame.surface.Surface((instance.cube_size() * size, 1))
