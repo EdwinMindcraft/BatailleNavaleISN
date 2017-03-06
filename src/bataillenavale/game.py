@@ -1,6 +1,7 @@
 from bataillenavale import engine
 from bataillenavale.engine import DIRECTION_DOWN, PLAYER_1, PLAYER_2, NULL,\
-    DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT, Rules
+    DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT, Rules, BOAT_CARRIER,\
+    BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, BOAT_DESTROYER
 from math import floor
 
 class Game():
@@ -20,6 +21,18 @@ class Game():
             return PLAYER_2
         else:
             return NULL
+    
+    def get_boat_size(self, boat_type):
+        size = 0
+        if boat_type == BOAT_CARRIER:
+            size = 5
+        elif boat_type == BOAT_BATTLESHIP:
+            size = 4
+        elif boat_type == BOAT_CRUISER or boat_type == BOAT_SUBMARINE:
+            size = 3
+        elif boat_type == BOAT_DESTROYER:
+            size = 2
+        return size
     
     def set_grid_size(self, size):
         self.grid_scale = size

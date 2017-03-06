@@ -3,6 +3,7 @@ from pygame.constants import *
 from bataillenavale import game
 from bataillenavale import engine
 from pydoc import render_doc
+from bataillenavale.engine import DIRECTION_UP
 
 def run_game():
     render_offset = (10, 10)
@@ -46,9 +47,11 @@ def run_game():
     
     carrier = pygame.image.load("carrier.png").convert_alpha()
     carrier = pygame.transform.scale(carrier, (5 * instance.cube_size(), instance.cube_size()))
+    carrier = pygame.transform.rotate(carrier, 270)
     
     carrier_invalid = pygame.image.load("carrier.png").convert_alpha()
     carrier_invalid = pygame.transform.scale(carrier_invalid, (5 * instance.cube_size(), instance.cube_size()))
+    carrier_invalid = pygame.transform.rotate(carrier_invalid, 270)
     carrier_invalid.set_masks((255, 127, 127, 0))
     
     prev_mouse_x = 0
@@ -59,6 +62,8 @@ def run_game():
         place_pos_x = instance.snap(prev_mouse_x - render_offset[0]) * instance.cube_size() + render_offset[0]
         place_pos_y = instance.snap(prev_mouse_y - render_offset[1]) * instance.cube_size() + render_offset[1]
         if (instance.can_place_boat(engine.BOAT_CARRIER, place_pos_x, place_pos_y)):
+            if (instance.rotation == DIRECTION_UP):
+                place_pos_y -= instance.get_boat_size(engine.BOAT_CARRIER) * instance.cube_size()
             window.blit(carrier, (place_pos_x, place_pos_y))
         else:
             window.blit(carrier_invalid, (place_pos_x, place_pos_y))
