@@ -36,7 +36,7 @@ class Game():
     
     def snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
-        return floor(num / size) - (1 if self.enable_borders else 0)
+        return floor(num / size)
     
     def render_snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
@@ -56,6 +56,19 @@ class Game():
             return self.player_1.can_place_boat_at((x, y), boat_type, self.rotation)
         else:
             return self.player_2.can_place_boat_at((x, y), boat_type, self.rotation)
+        
+    def handle_play(self, mouse_x, mouse_y):
+        x = self.snap(mouse_x)
+        y = self.snap(mouse_y)
+        if (x < 0 or x > 9):
+            return
+        if (y < 0 or y > 9):
+            return
+        player = self.player_1 if self.turn == PLAYER_1 else self.player_2
+        other = self.player_2 if self.turn == PLAYER_1 else self.player_1
+        if player.opponent_grid[x][y] != NULL:
+            return
+        player.attack(other, (x, y))
     
     def place_boat_at(self, boat_type, mouse_x, mouse_y):
         x = self.snap(mouse_x)

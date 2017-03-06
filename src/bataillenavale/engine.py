@@ -121,7 +121,7 @@ class Player():
             return 0
         
     def can_place_boat_at(self, position, boat_type, direction):
-        if (self.rules.get_boat_limit() >= self.get_boat_count(boat_type)):
+        if (self.rules.get_boat_limit(boat_type) >= self.get_boat_count(boat_type)):
             return False
         size = 0
         if boat_type == BOAT_CARRIER:
