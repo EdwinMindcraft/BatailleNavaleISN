@@ -121,7 +121,8 @@ class Player():
             return 0
         
     def can_place_boat_at(self, position, boat_type, direction):
-        if (self.rules.get_boat_limit(boat_type) >= self.get_boat_count(boat_type)):
+        if (self.rules.get_boat_limit(boat_type) <= self.get_boat_count(boat_type)):
+            print ("Error : Too much boats (Max:" + str(self.rules.get_boat_limit(boat_type)) + ",Placed:" + str(self.get_boat_count(boat_type)) + ")")
             return False
         size = 0
         if boat_type == BOAT_CARRIER:
@@ -145,6 +146,7 @@ class Player():
         for i in range(0, size):
             target = (position[0] + (x_offset * i), position[1] + (y_offset * i))
             if not self.can_place_at(target):
+                print ("Error non empty or invalid slot at : " + str(target))
                 return False
         return True
     
