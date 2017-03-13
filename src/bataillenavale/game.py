@@ -49,11 +49,11 @@ class Game():
     
     def snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
-        return floor(num / size)
+        return floor(num / size) - (1 if self.enable_borders else 0)
     
     def render_snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
-        return int(floor(num / size) * size)
+        return int(floor(num / size) * (size + (1 if self.enable_borders else 0)))
     
     def cube_size(self):
         return int(self.grid_scale / (11 if self.enable_borders else 10))
