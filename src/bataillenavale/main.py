@@ -91,9 +91,9 @@ def run_game():
                 prev_mouse_x = event.pos[0]
                 prev_mouse_y = event.pos[1]
             if event.type == MOUSEBUTTONUP:
-                if event.button == 1:
+                if event.button == 1: #Left Click
                     print ("Missed")
-                elif event.button == 0:
+                elif event.button == 3: #Right Click
                     instance.cycle_rotation()
         if not should_close:
             pygame.display.flip()
