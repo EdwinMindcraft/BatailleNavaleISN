@@ -60,6 +60,18 @@ def run_game():
     drawable_h = pygame.transform.scale(pygame.image.load("drawables/H.png"), (instance.cube_size(), instance.cube_size()))
     drawable_i = pygame.transform.scale(pygame.image.load("drawables/I.png"), (instance.cube_size(), instance.cube_size()))
     drawable_j = pygame.transform.scale(pygame.image.load("drawables/J.png"), (instance.cube_size(), instance.cube_size()))
+
+    drawable_1 = pygame.transform.scale(pygame.image.load("drawables/1.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_2 = pygame.transform.scale(pygame.image.load("drawables/2.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_3 = pygame.transform.scale(pygame.image.load("drawables/3.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_4 = pygame.transform.scale(pygame.image.load("drawables/4.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_5 = pygame.transform.scale(pygame.image.load("drawables/5.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_6 = pygame.transform.scale(pygame.image.load("drawables/6.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_7 = pygame.transform.scale(pygame.image.load("drawables/7.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_8 = pygame.transform.scale(pygame.image.load("drawables/8.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_9 = pygame.transform.scale(pygame.image.load("drawables/9.png"), (instance.cube_size(), instance.cube_size()))
+    drawable_10 = pygame.transform.scale(pygame.image.load("drawables/10.png"), (instance.cube_size(), instance.cube_size()))
+
    
     while not should_close:
         window.blit(bg, (0, 0))
@@ -74,6 +86,17 @@ def run_game():
         window.blit(drawable_h, (render_offset[0], render_offset[1] + instance.cube_size() * 8))
         window.blit(drawable_i, (render_offset[0], render_offset[1] + instance.cube_size() * 9))
         window.blit(drawable_j, (render_offset[0], render_offset[1] + instance.cube_size() * 10))
+        
+        window.blit(drawable_1, (render_offset[0] + instance.cube_size() * 1, render_offset[1]))
+        window.blit(drawable_2, (render_offset[0] + instance.cube_size() * 2, render_offset[1]))
+        window.blit(drawable_3, (render_offset[0] + instance.cube_size() * 3, render_offset[1]))
+        window.blit(drawable_4, (render_offset[0] + instance.cube_size() * 4, render_offset[1]))
+        window.blit(drawable_5, (render_offset[0] + instance.cube_size() * 5, render_offset[1]))
+        window.blit(drawable_6, (render_offset[0] + instance.cube_size() * 6, render_offset[1]))
+        window.blit(drawable_7, (render_offset[0] + instance.cube_size() * 7, render_offset[1]))
+        window.blit(drawable_8, (render_offset[0] + instance.cube_size() * 8, render_offset[1]))
+        window.blit(drawable_9, (render_offset[0] + instance.cube_size() * 9, render_offset[1]))
+        window.blit(drawable_10, (render_offset[0] + instance.cube_size() * 10, render_offset[1]))
         
         drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, BOAT_CARRIER, instance.rotation)
         

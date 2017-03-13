@@ -13,7 +13,7 @@ class Drawer():
         
         self.carrier_invalid = pygame.image.load("carrier.png").convert_alpha()
         self.carrier_invalid = pygame.transform.scale(self.carrier_invalid, (5 * instance.cube_size(), instance.cube_size()))
-        self.carrier_invalid.set_masks((0, 127, 127, 0))
+        self.carrier_invalid.set_masks((0, 0, 0, 0))
         
 
     def drawBoatAtPosition(self, window, mouseX, mouseY, boat_type, direction):
