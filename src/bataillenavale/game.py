@@ -6,7 +6,7 @@ from math import floor
 
 class Game():
     def __init__(self, grid_scale, enable_borders = True, rules = Rules()):
-        self.rotation = DIRECTION_DOWN
+        self.rotation = DIRECTION_RIGHT
         self.rules = rules
         self.player_1 = engine.Player(rules)
         self.player_2 = engine.Player(rules)

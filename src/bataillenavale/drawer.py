@@ -2,6 +2,7 @@ import pygame
 from bataillenavale import engine
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER,\
     DIRECTION_DOWN
+import bataillenavale.colorizer
 
 
 class Drawer():
@@ -11,14 +12,15 @@ class Drawer():
         self.carrier = pygame.image.load("carrier.png").convert_alpha()
         self.carrier = pygame.transform.scale(self.carrier, (5 * instance.cube_size(), instance.cube_size()))
         
-        self.carrier_invalid = pygame.image.load("carrier.png").convert_alpha()
-        self.carrier_invalid = pygame.transform.scale(self.carrier_invalid, (5 * instance.cube_size(), instance.cube_size()))
-        self.carrier_invalid.set_masks((0, 0, 0, 0))
+        self.carrier_invalid = self.carrier.copy()
+        bataillenavale.colorizer.create_invalid(self.carrier_invalid)
+        
         
 
     def drawBoatAtPosition(self, window, mouseX, mouseY, boat_type, direction):
-        place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0]
-        place_pos_y = self.instance.snap(mouseY - self.render_offset[1]) * self.instance.cube_size() + self.render_offset[1]
+        place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
+        place_pos_y = self.instance.snap(mouseY - self.render_offset[1]) * self.instance.cube_size() + self.render_offset[1] + self.instance.cube_size()
+    
         canPlace = self.instance.can_place_boat(boat_type, place_pos_x, place_pos_y)
         texture = self.getBoatTexture(boat_type, canPlace)
         if (direction == DIRECTION_UP):
