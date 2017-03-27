@@ -34,7 +34,7 @@ class Drawer():
         self.submarime_invalid = self.submarime.copy()
         self.destroyer_invalid = self.destroyer.copy()
         
-        self.selector = Surface((1010, 500))
+        self.selector = Surface((1010, 400))
                 
         bataillenavale.colorizer.create_invalid(self.carrier_invalid)
         bataillenavale.colorizer.create_invalid(self.battleship_invalid)
@@ -42,7 +42,7 @@ class Drawer():
         bataillenavale.colorizer.create_invalid(self.submarime_invalid)
         bataillenavale.colorizer.create_invalid(self.destroyer_invalid)
         
-        
+        bataillenavale.colorizer.create_transparent(self.selector)
 
     def drawBoatAtPosition(self, window, mouseX, mouseY, boat_type, direction):
         place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
