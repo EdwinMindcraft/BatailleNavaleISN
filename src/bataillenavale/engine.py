@@ -78,6 +78,11 @@ class Player():
         self.cruiser_placed = 0
         self.submarine_placed = 0
         self.destroyer_placed = 0
+        self.carrier_pos = []
+        self.battleship_pos = []
+        self.cruiser_pos = []
+        self.submarine_pos = []
+        self.destroyer_pos = []
         
     def place_boat(self, position, boat_type, direction):
         if not self.can_place_boat_at(position, boat_type, direction):
@@ -96,12 +101,19 @@ class Player():
         
         if boat_type == BOAT_CARRIER:
             size = 5
+            self.carrier_pos.append((position, direction))
         elif boat_type == BOAT_BATTLESHIP:
             size = 4
-        elif boat_type == BOAT_CRUISER or boat_type == BOAT_SUBMARINE:
+            self.battleship_pos.append((position, direction))
+        elif boat_type == BOAT_CRUISER:
             size = 3
+            self.cruiser_pos.append((position, direction))
+        elif boat_type == BOAT_SUBMARINE:
+            size = 3
+            self.submarine_pos.append((position, direction))
         elif boat_type == BOAT_DESTROYER:
             size = 2
+            self.destroyer_pos.append((position, direction))
         for i in range(0, size):
             target = (position[0] + (x_offset * i), position[1] + (y_offset * i))
             self.grid[target[0]][target[1]] = BOAT

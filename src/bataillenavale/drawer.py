@@ -48,6 +48,9 @@ class Drawer():
         place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
         place_pos_y = self.instance.snap(mouseY - self.render_offset[1]) * self.instance.cube_size() + self.render_offset[1] + self.instance.cube_size()
     
+        self.draw_int(window, place_pos_x, place_pos_y, boat_type, direction)
+    
+    def draw_int(self, window, place_pos_x, place_pos_y, boat_type, direction):
         canPlace = self.instance.can_place_boat(boat_type, place_pos_x, place_pos_y)
         texture = self.getBoatTexture(boat_type, canPlace)
         if (direction == DIRECTION_UP):
@@ -64,6 +67,10 @@ class Drawer():
     def drawBoatSelector(self, window):
         self.selector.blit(self.carrier, (10, 10))
         window.blit(self.selector, self.boat_selector_pos)
+        
+    def drawBoard(self, window, instance):
+        for pos in instance.player_1.carrier_pos:
+            self.draw_int(window, pos[0][0], pos[0][1], BOAT_CARRIER, pos[1])
     
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
