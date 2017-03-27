@@ -24,6 +24,9 @@ class Game():
         else:
             return NULL
     
+    def get_current_player(self):
+        return self.player_1 if self.turn == PLAYER_1 else self.player_2
+    
     def get_boat_size(self, boat_type):
         size = 0
         if boat_type == BOAT_CARRIER:
@@ -76,7 +79,15 @@ class Game():
         if (mouse_x > self.boat_selector_pos[0] and mouse_x < self.boat_selector_pos[0] + 1020 and mouse_y > self.boat_selector_pos[1] and mouse_y < self.boat_selector_pos[1] + 500):
             pos_x = mouse_x - self.boat_selector_pos[0]
             pos_y = mouse_y - self.boat_selector_pos[1]
-            
+            if (pos_x > 10 and pos_x < 235):
+                if (pos_y > 10 and pos_y < 55):
+                    
+                elif (pos_y > 65 and pos_y < 55):
+                    
+                elif (pos_y > 10 and pos_y < 55):
+                    
+            elif (pos_x > 520 and pos_x < 755):
+                
             return
         x = self.snap(mouse_x)
         y = self.snap(mouse_y)

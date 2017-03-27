@@ -1,10 +1,11 @@
 import pygame
-from bataillenavale import engine
-from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER,\
-    DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE,\
-    BOAT_DESTROYER
-import bataillenavale.colorizer
 from pygame.surface import Surface
+
+from bataillenavale import engine
+import bataillenavale.colorizer
+from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
+    DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, \
+    BOAT_DESTROYER
 
 
 class Drawer():
@@ -34,24 +35,22 @@ class Drawer():
         self.submarime_invalid = self.submarime.copy()
         self.destroyer_invalid = self.destroyer.copy()
         
-        self.selector = Surface((1010, 400))
+        self.selector = Surface((1010, 400), pygame.SRCALPHA, 32).convert_alpha()
                 
         bataillenavale.colorizer.create_invalid(self.carrier_invalid)
         bataillenavale.colorizer.create_invalid(self.battleship_invalid)
         bataillenavale.colorizer.create_invalid(self.cruiser_invalid)
         bataillenavale.colorizer.create_invalid(self.submarime_invalid)
         bataillenavale.colorizer.create_invalid(self.destroyer_invalid)
-        
-        bataillenavale.colorizer.create_transparent(self.selector)
 
     def drawBoatAtPosition(self, window, mouseX, mouseY, boat_type, direction):
         place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
         place_pos_y = self.instance.snap(mouseY - self.render_offset[1]) * self.instance.cube_size() + self.render_offset[1] + self.instance.cube_size()
     
-        self.draw_int(window, place_pos_x, place_pos_y, boat_type, direction)
-    
-    def draw_int(self, window, place_pos_x, place_pos_y, boat_type, direction):
         canPlace = self.instance.can_place_boat(boat_type, place_pos_x, place_pos_y)
+        self.draw_int(window, place_pos_x, place_pos_y, boat_type, direction, canPlace)
+    
+    def draw_int(self, window, place_pos_x, place_pos_y, boat_type, direction, canPlace):
         texture = self.getBoatTexture(boat_type, canPlace)
         if (direction == DIRECTION_UP):
             texture = pygame.transform.rotate(texture, 90)
@@ -66,11 +65,23 @@ class Drawer():
     
     def drawBoatSelector(self, window):
         self.selector.blit(self.carrier, (10, 10))
+        self.selector.blit(self.battleship, (10, 65))
+        self.selector.blit(self.cruiser, (10, 120))
+        self.selector.blit(self.submarime, (510, 10))
+        self.selector.blit(self.destroyer, (520, 65))
         window.blit(self.selector, self.boat_selector_pos)
         
     def drawBoard(self, window, instance):
-        for pos in instance.player_1.carrier_pos:
-            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CARRIER, pos[1])
+        for pos in instance.get_current_player().carrier_pos:
+            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CARRIER, pos[1], True)
+        for pos in instance.get_current_player().battleship_pos:
+            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_BATTLESHIP, pos[1], True)
+        for pos in instance.get_current_player().cruiser_pos:
+            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CRUISER, pos[1], True)
+        for pos in instance.get_current_player().submarine_pos:
+            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_SUBMARINE, pos[1], True)
+        for pos in instance.get_current_player().destroyer_pos:
+            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_DESTROYER, pos[1], True)
     
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
