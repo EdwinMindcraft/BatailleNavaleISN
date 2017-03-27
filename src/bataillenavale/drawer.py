@@ -34,8 +34,8 @@ class Drawer():
         self.submarime_invalid = self.submarime.copy()
         self.destroyer_invalid = self.destroyer.copy()
         
-        self.selector = Surface()
-        
+        self.selector = Surface((1010, 500))
+                
         bataillenavale.colorizer.create_invalid(self.carrier_invalid)
         bataillenavale.colorizer.create_invalid(self.battleship_invalid)
         bataillenavale.colorizer.create_invalid(self.cruiser_invalid)
@@ -62,7 +62,8 @@ class Drawer():
         window.blit(texture, (place_pos_x, place_pos_y))
     
     def drawBoatSelector(self, window):
-        window.blit(self.selector)
+        self.selector.blit(self.carrier, (10, 10))
+        window.blit(self.selector, self.boat_selector_pos)
     
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
