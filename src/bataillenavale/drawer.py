@@ -4,12 +4,14 @@ from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER,\
     DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE,\
     BOAT_DESTROYER
 import bataillenavale.colorizer
+from pygame.surface import Surface
 
 
 class Drawer():
-    def __init__(self, instance, render_offset):
+    def __init__(self, instance, render_offset, boat_selector_pos):
         self.instance = instance
         self.render_offset = render_offset
+        self.boat_selector_pos = boat_selector_pos
         
         self.carrier = pygame.image.load("carrier.png").convert_alpha()
         self.carrier = pygame.transform.scale(self.carrier, (5 * instance.cube_size(), instance.cube_size()))
@@ -31,6 +33,9 @@ class Drawer():
         self.cruiser_invalid = self.cruiser.copy()
         self.submarime_invalid = self.submarime.copy()
         self.destroyer_invalid = self.destroyer.copy()
+        
+        self.selector = Surface()
+        
         bataillenavale.colorizer.create_invalid(self.carrier_invalid)
         bataillenavale.colorizer.create_invalid(self.battleship_invalid)
         bataillenavale.colorizer.create_invalid(self.cruiser_invalid)
@@ -55,6 +60,9 @@ class Drawer():
             texture = pygame.transform.rotate(texture, 270)
         
         window.blit(texture, (place_pos_x, place_pos_y))
+    
+    def drawBoatSelector(self, window):
+        window.blit(self.selector)
     
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
