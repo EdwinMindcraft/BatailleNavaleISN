@@ -1,7 +1,8 @@
 import pygame
 from bataillenavale import engine
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER,\
-    DIRECTION_DOWN
+    DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE,\
+    BOAT_DESTROYER
 import bataillenavale.colorizer
 
 
@@ -9,11 +10,32 @@ class Drawer():
     def __init__(self, instance, render_offset):
         self.instance = instance
         self.render_offset = render_offset
+        
         self.carrier = pygame.image.load("carrier.png").convert_alpha()
         self.carrier = pygame.transform.scale(self.carrier, (5 * instance.cube_size(), instance.cube_size()))
         
+        self.battleship = pygame.image.load("battleship.png").convert_alpha()
+        self.battleship = pygame.transform.scale(self.battleship, (4 * instance.cube_size(), instance.cube_size()))
+        
+        self.cruiser = pygame.image.load("cruiser.png").convert_alpha()
+        self.cruiser = pygame.transform.scale(self.cruiser, (3 * instance.cube_size(), instance.cube_size()))
+        
+        self.submarime = pygame.image.load("submarine.png").convert_alpha()
+        self.submarime = pygame.transform.scale(self.submarime, (3 * instance.cube_size(), instance.cube_size()))
+        
+        self.destroyer = pygame.image.load("destroyer.png").convert_alpha()
+        self.destroyer = pygame.transform.scale(self.destroyer, (2 * instance.cube_size(), instance.cube_size()))
+        
         self.carrier_invalid = self.carrier.copy()
+        self.battleship_invalid = self.battleship.copy()
+        self.cruiser_invalid = self.cruiser.copy()
+        self.submarime_invalid = self.submarime.copy()
+        self.destroyer_invalid = self.destroyer.copy()
         bataillenavale.colorizer.create_invalid(self.carrier_invalid)
+        bataillenavale.colorizer.create_invalid(self.battleship_invalid)
+        bataillenavale.colorizer.create_invalid(self.cruiser_invalid)
+        bataillenavale.colorizer.create_invalid(self.submarime_invalid)
+        bataillenavale.colorizer.create_invalid(self.destroyer_invalid)
         
         
 
@@ -37,3 +59,12 @@ class Drawer():
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
             return self.carrier if valid else self.carrier_invalid
+        elif (boat_type == BOAT_BATTLESHIP):
+            return self.battleship if valid else self.battleship_invalid
+        elif (boat_type == BOAT_CRUISER):
+            return self.cruiser if valid else self.cruiser_invalid
+        elif (boat_type == BOAT_SUBMARINE):
+            return self.submarime if valid else self.submarime_invalid
+        elif (boat_type == BOAT_DESTROYER):
+            return self.destroyer if valid else self.destroyer_invalid
+
