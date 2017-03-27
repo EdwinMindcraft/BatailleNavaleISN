@@ -5,12 +5,14 @@ from bataillenavale.engine import DIRECTION_DOWN, PLAYER_1, PLAYER_2, NULL,\
 from math import floor
 
 class Game():
-    def __init__(self, grid_scale, enable_borders = True, rules = Rules()):
+    def __init__(self, grid_scale, boat_selector_pos, enable_borders = True, rules = Rules()):
         self.rotation = DIRECTION_RIGHT
         self.rules = rules
+        self.boat_selector_pos = boat_selector_pos
         self.player_1 = engine.Player(rules)
         self.player_2 = engine.Player(rules)
         self.turn = engine.PLAYER_1
+        self.selected_boat_type = BOAT_CARRIER
         self.grid_scale = grid_scale
         self.enable_borders = enable_borders
     
