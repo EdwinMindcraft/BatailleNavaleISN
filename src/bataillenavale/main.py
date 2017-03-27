@@ -2,11 +2,13 @@ import pygame
 from pygame.constants import *
 from bataillenavale import game
 from bataillenavale import engine
-from bataillenavale.engine import DIRECTION_UP, BOAT_CARRIER
+from bataillenavale.engine import DIRECTION_UP, BOAT_CARRIER, BOAT_CRUISER
 from bataillenavale.drawer import Drawer
+from matplotlib.pyplot import draw
 
 def run_game():
     render_offset = (10, 10)
+    place_grid_position = (10, 510)
     
     #Ordre de taille de la grille.
     grid_size = 500
@@ -18,7 +20,7 @@ def run_game():
     rules = engine.Rules()
         
     #Creation de l'instance du jeu
-    instance = game.Game(grid_size, rules=rules)
+    instance = game.Game(grid_size, place_grid_position, rules=rules)
     
     #Calcul de la taille de la grille
     grid_size = instance.cube_size() * (11 if instance.enable_borders else 10)
@@ -48,7 +50,7 @@ def run_game():
     prev_mouse_x = 0
     prev_mouse_y = 0
     
-    drawer = Drawer(instance, render_offset)
+    drawer = Drawer(instance, render_offset, place_grid_position)
     #On place les lettres et les chiffres sur la grille
     drawable_a = pygame.transform.scale(pygame.image.load("drawables/A.png"), (instance.cube_size(), instance.cube_size()))
     drawable_b = pygame.transform.scale(pygame.image.load("drawables/B.png"), (instance.cube_size(), instance.cube_size()))
@@ -120,7 +122,8 @@ def run_game():
         window.blit(drawable_9, (render_offset[0] * 3 + grid_size + instance.cube_size() * 9, render_offset[1]))
         window.blit(drawable_10, (render_offset[0] * 3 + grid_size + instance.cube_size() * 10, render_offset[1]))
         
-        drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, BOAT_CARRIER, instance.rotation)
+        drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)
+        drawer.drawBoard(window, instance)
         
         for i in range(0, grid_size + 1, instance.cube_size()):
             window.blit(line_vert, (render_offset[0] + i, render_offset[1]))
@@ -137,7 +140,7 @@ def run_game():
                 prev_mouse_y = event.pos[1]
             if event.type == MOUSEBUTTONUP:
                 if event.button == 1: #Left Click
-                    print ("Missed")
+                    instance.place_boat_at(instance.selected_boat_type, prev_mouse_x, prev_mouse_y)
                 elif event.button == 3: #Right Click
                     instance.cycle_rotation()
         if not should_close:

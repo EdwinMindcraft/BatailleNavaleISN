@@ -70,7 +70,7 @@ class Drawer():
         
     def drawBoard(self, window, instance):
         for pos in instance.player_1.carrier_pos:
-            self.draw_int(window, pos[0][0], pos[0][1], BOAT_CARRIER, pos[1])
+            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CARRIER, pos[1])
     
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
