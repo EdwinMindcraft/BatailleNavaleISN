@@ -28,7 +28,7 @@ def run_game():
     instance.set_grid_size(grid_size)
     
     #Creation de la fenetre
-    window = pygame.display.set_mode((render_offset[0] * 4 + grid_size * 2, render_offset[1] * 2 + grid_size))
+    window = pygame.display.set_mode((render_offset[0] * 4 + grid_size * 2, render_offset[1] * 2 + grid_size + 400))
     #On nomme la fenetre
     pygame.display.set_caption("Bataille Navale")
     #On y met une icone
@@ -124,7 +124,7 @@ def run_game():
         
         drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)
         drawer.drawBoard(window, instance)
-        
+        drawer.drawBoatSelector(window)
         for i in range(0, grid_size + 1, instance.cube_size()):
             window.blit(line_vert, (render_offset[0] + i, render_offset[1]))
             window.blit(line_hori, (render_offset[0], render_offset[1] + i))
@@ -140,7 +140,7 @@ def run_game():
                 prev_mouse_y = event.pos[1]
             if event.type == MOUSEBUTTONUP:
                 if event.button == 1: #Left Click
-                    instance.place_boat_at(instance.selected_boat_type, prev_mouse_x, prev_mouse_y)
+                    instance.place_boat_at(instance.selected_boat_type, prev_mouse_x - render_offset[0], prev_mouse_y - render_offset[1])
                 elif event.button == 3: #Right Click
                     instance.cycle_rotation()
         if not should_close:
