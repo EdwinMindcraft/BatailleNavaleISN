@@ -122,7 +122,8 @@ def run_game():
         window.blit(drawable_9, (render_offset[0] * 3 + grid_size + instance.cube_size() * 9, render_offset[1]))
         window.blit(drawable_10, (render_offset[0] * 3 + grid_size + instance.cube_size() * 10, render_offset[1]))
         
-        drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)
+        if (prev_mouse_x - render_offset[0] > 0 and prev_mouse_x - render_offset[0] < grid_size and prev_mouse_y -render_offset[1] > 0 and prev_mouse_y - render_offset[1] < grid_size):
+            drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)
         drawer.drawBoard(window, instance)
         drawer.drawBoatSelector(window)
         for i in range(0, grid_size + 1, instance.cube_size()):
