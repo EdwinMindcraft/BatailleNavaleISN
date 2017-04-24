@@ -11,6 +11,7 @@ class Game():
         self.boat_selector_pos = boat_selector_pos
         self.player_1 = engine.Player(rules)
         self.player_2 = engine.Player(rules)
+        self.is_placing = True
         self.turn = engine.PLAYER_1
         self.selected_boat_type = BOAT_CARRIER
         self.grid_scale = grid_scale
@@ -82,15 +83,18 @@ class Game():
             if (pos_x > 10 and pos_x < 235):
                 if (pos_y > 10 and pos_y < 55):
                     self.selected_boat_type = BOAT_CARRIER
-                elif (pos_y > 65 and pos_y < 55):
+                elif (pos_y > 65 and pos_y < 120):
                     self.selected_boat_type = BOAT_BATTLESHIP
-                elif (pos_y > 10 and pos_y < 55):
+                elif (pos_y > 130 and pos_y < 185):
                     self.selected_boat_type = BOAT_CRUISER
             elif (pos_x > 520 and pos_x < 755):
                 if (pos_y > 10 and pos_y < 55):
                     self.selected_boat_type = BOAT_SUBMARINE
-                elif (pos_y > 65 and pos_y < 55):
+                elif (pos_y > 65 and pos_y < 120):
                     self.selected_boat_type = BOAT_DESTROYER
+            return
+        if (self.is_placing):
+            self.place_boat_at(self.selected_boat_type, mouse_x, mouse_y)
             return
         x = self.snap(mouse_x)
         y = self.snap(mouse_y)

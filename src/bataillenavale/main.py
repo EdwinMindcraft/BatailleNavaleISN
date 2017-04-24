@@ -140,7 +140,7 @@ def run_game():
                 prev_mouse_y = event.pos[1]
             if event.type == MOUSEBUTTONUP:
                 if event.button == 1: #Left Click
-                    instance.place_boat_at(instance.selected_boat_type, prev_mouse_x - render_offset[0], prev_mouse_y - render_offset[1])
+                    instance.handle_play(prev_mouse_x - render_offset[0], prev_mouse_y - render_offset[1])
                 elif event.button == 3: #Right Click
                     instance.cycle_rotation()
         if not should_close:

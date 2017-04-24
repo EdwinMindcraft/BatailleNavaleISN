@@ -102,18 +102,23 @@ class Player():
         if boat_type == BOAT_CARRIER:
             size = 5
             self.carrier_pos.append((position, direction))
+            self.carrier_placed += 1
         elif boat_type == BOAT_BATTLESHIP:
             size = 4
             self.battleship_pos.append((position, direction))
+            self.battleship_placed += 1
         elif boat_type == BOAT_CRUISER:
             size = 3
             self.cruiser_pos.append((position, direction))
+            self.cruiser_placed += 1
         elif boat_type == BOAT_SUBMARINE:
             size = 3
             self.submarine_pos.append((position, direction))
+            self.submarine_placed += 1
         elif boat_type == BOAT_DESTROYER:
             size = 2
             self.destroyer_pos.append((position, direction))
+            self.destroyer_placed += 1
         for i in range(0, size):
             target = (position[0] + (x_offset * i), position[1] + (y_offset * i))
             self.grid[target[0]][target[1]] = BOAT
@@ -134,7 +139,6 @@ class Player():
         
     def can_place_boat_at(self, position, boat_type, direction):
         if (self.rules.get_boat_limit(boat_type) <= self.get_boat_count(boat_type)):
-            #print ("Error : Too much boats (Max:" + str(self.rules.get_boat_limit(boat_type)) + ",Placed:" + str(self.get_boat_count(boat_type)) + ")")
             return False
         size = 0
         if boat_type == BOAT_CARRIER:
@@ -158,7 +162,6 @@ class Player():
         for i in range(0, size):
             target = (position[0] + (x_offset * i), position[1] + (y_offset * i))
             if not self.can_place_at(target):
-                #print ("Error non empty or invalid slot at : " + str(target))
                 return False
         return True
     
@@ -192,6 +195,14 @@ class Player():
             return HIT_SUCCESS
         else:
             return HIT_MISS
+    
+    def should_switch(self):
+        carrier_left = self.rules.get_boat_limit(BOAT_CARRIER) - self.carrier_placed
+        battleship_left = self.rules.get_boat_limit(BOAT_BATTLESHIP) - self.carrier_placed
+        cruiser_left = self.rules.get_boat_limit(BOAT_CRUISER) - self.carrier_placed
+        destroyer_left = self.rules.get_boat_limit(BOAT_DESTROYER) - self.carrier_placed
+        submarine_left = self.rules.get_boat_limit(BOAT_SUBMARINE) - self.carrier_placed
+        return carrier_left == 0 and battleship_left == 0 and cruiser_left == 0 and destroyer_left == 0 and submarine_left == 0
     
     def has_boat_left(self):
         for x in range(len(self.grid)):
