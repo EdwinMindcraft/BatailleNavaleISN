@@ -76,7 +76,7 @@ def run_game():
     drawable_9 = pygame.transform.scale(pygame.image.load("drawables/9.png"), (instance.cube_size(), instance.cube_size()))
     drawable_10 = pygame.transform.scale(pygame.image.load("drawables/10.png"), (instance.cube_size(), instance.cube_size()))
     
-    #Ici on met a jour la fenêtre.
+    #Ici on met a jour la fenetre.
     while not should_close:
         window.blit(bg, (0, 0)) #On dessine l'arriere plan
         

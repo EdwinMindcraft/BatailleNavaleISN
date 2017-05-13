@@ -6,6 +6,7 @@ downloads
 eggs
 parts
 src/*.egg-info
+src/build
 lib
 lib64
 *.pyc
