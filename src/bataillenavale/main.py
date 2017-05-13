@@ -1,19 +1,18 @@
 import pygame
 from pygame.constants import *
-from bataillenavale import game
+
 from bataillenavale import engine
-from bataillenavale.engine import DIRECTION_UP, BOAT_CARRIER, BOAT_CRUISER
+from bataillenavale import game
 from bataillenavale.drawer import Drawer
-from matplotlib.pyplot import draw
+
 
 def run_game():
-    render_offset = (10, 10)
-    place_grid_position = (10, 510)
+    render_offset = (10, 40)
+    place_grid_position = (10, 540)
     
     #Ordre de taille de la grille.
     grid_size = 500
     #Initialisation de pygame
-    print("Initialisation")
     pygame.init()
     
     #Regles
@@ -44,14 +43,17 @@ def run_game():
     
     #On calcule le nombre de case
     size = (11 if instance.enable_borders else 10)
+    #On creer les barres qui vont separer les cases
     line_vert = pygame.surface.Surface((1, instance.cube_size() * size))
     line_hori = pygame.surface.Surface((instance.cube_size() * size, 1))
     
+    #On defini les position de souris. Elle permettent de faire des equivalent de boutons
     prev_mouse_x = 0
     prev_mouse_y = 0
     
+    #On creer le drawer, celui qui contient la majorite des choses a dessiner
     drawer = Drawer(instance, render_offset, place_grid_position)
-    #On place les lettres et les chiffres sur la grille
+    #On charge les lettres et les chiffres.
     drawable_a = pygame.transform.scale(pygame.image.load("drawables/A.png"), (instance.cube_size(), instance.cube_size()))
     drawable_b = pygame.transform.scale(pygame.image.load("drawables/B.png"), (instance.cube_size(), instance.cube_size()))
     drawable_c = pygame.transform.scale(pygame.image.load("drawables/C.png"), (instance.cube_size(), instance.cube_size()))
@@ -73,11 +75,12 @@ def run_game():
     drawable_8 = pygame.transform.scale(pygame.image.load("drawables/8.png"), (instance.cube_size(), instance.cube_size()))
     drawable_9 = pygame.transform.scale(pygame.image.load("drawables/9.png"), (instance.cube_size(), instance.cube_size()))
     drawable_10 = pygame.transform.scale(pygame.image.load("drawables/10.png"), (instance.cube_size(), instance.cube_size()))
-
-   
+    
+    #Ici on met a jour la fenêtre.
     while not should_close:
-        window.blit(bg, (0, 0))
+        window.blit(bg, (0, 0)) #On dessine l'arriere plan
         
+        #On ecrit les lettres et les chiffres sur les 2 grilles
         window.blit(drawable_a, (render_offset[0], render_offset[1] + instance.cube_size() * 1))
         window.blit(drawable_b, (render_offset[0], render_offset[1] + instance.cube_size() * 2))
         window.blit(drawable_c, (render_offset[0], render_offset[1] + instance.cube_size() * 3))
@@ -122,29 +125,36 @@ def run_game():
         window.blit(drawable_9, (render_offset[0] * 3 + grid_size + instance.cube_size() * 9, render_offset[1]))
         window.blit(drawable_10, (render_offset[0] * 3 + grid_size + instance.cube_size() * 10, render_offset[1]))
         
-        if (prev_mouse_x - render_offset[0] > 0 and prev_mouse_x - render_offset[0] < grid_size and prev_mouse_y -render_offset[1] > 0 and prev_mouse_y - render_offset[1] < grid_size):
+        #On dessine le bateau selectionne si la souris est sur la premiere grille et que l'on est dans le mode initialisation
+        if (instance.is_placing and prev_mouse_x - render_offset[0] > 0 and prev_mouse_x - render_offset[0] < grid_size and prev_mouse_y -render_offset[1] > 0 and prev_mouse_y - render_offset[1] < grid_size):
             drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)
+        
+        #On dessine les bateaus sur la grille.
         drawer.drawBoard(window, instance)
-        drawer.drawBoatSelector(window)
+        #On dessine la grille de selection des bateaus
+        drawer.drawBoatSelector(window, instance)
+        #On dessine les lignes qui limite les cases des grilles
         for i in range(0, grid_size + 1, instance.cube_size()):
             window.blit(line_vert, (render_offset[0] + i, render_offset[1]))
             window.blit(line_hori, (render_offset[0], render_offset[1] + i))
             
             window.blit(line_vert, (render_offset[0] * 3 + grid_size + i, render_offset[1]))
             window.blit(line_hori, (render_offset[0] * 3 + grid_size, render_offset[1] + i))
+        
+        #On regarge les evenements que la fenetre recois (Clics, Mouvements de souris...)
         for event in pygame.event.get():
-            if event.type == QUIT:
-                print("Closing")
-                should_close = True
-            if event.type == MOUSEMOTION:
+            if event.type == QUIT: #Si l'evenement est fermer la fenetre (la croix)...
+                should_close = True #...on arrete la boucle, donc on termine le programme
+            if event.type == MOUSEMOTION: #Si l'evenement est un mouvement de souris...
+                #...on stocke la nouvelle position de la souris
                 prev_mouse_x = event.pos[0]
                 prev_mouse_y = event.pos[1]
-            if event.type == MOUSEBUTTONUP:
-                if event.button == 1: #Left Click
-                    instance.handle_play(prev_mouse_x - render_offset[0], prev_mouse_y - render_offset[1])
-                elif event.button == 3: #Right Click
-                    instance.cycle_rotation()
-        if not should_close:
-            pygame.display.flip()
-        else:
-            pygame.quit()
+            if event.type == MOUSEBUTTONUP: #Lorsque l'on lache le clic...
+                if event.button == 1: #Clic gauche
+                    instance.handle_play(prev_mouse_x - render_offset[0], prev_mouse_y - render_offset[1]) #On joue.
+                elif event.button == 3 and instance.is_placing: #Clic droit
+                    instance.cycle_rotation() #On change la rotation du placement du bateau
+        if not should_close: #Si on ne doit pas fermer...
+            pygame.display.flip() #On actualise la fenetre.
+        else: # Sinon...
+            pygame.quit() #On detruis l'objet pygame, pour eviter de saturer la memoire.

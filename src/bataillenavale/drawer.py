@@ -23,8 +23,8 @@ class Drawer():
         self.cruiser = pygame.image.load("cruiser.png").convert_alpha()
         self.cruiser = pygame.transform.scale(self.cruiser, (3 * instance.cube_size(), instance.cube_size()))
         
-        self.submarime = pygame.image.load("submarine.png").convert_alpha()
-        self.submarime = pygame.transform.scale(self.submarime, (3 * instance.cube_size(), instance.cube_size()))
+        self.submarine = pygame.image.load("submarine.png").convert_alpha()
+        self.submarine = pygame.transform.scale(self.submarine, (3 * instance.cube_size(), instance.cube_size()))
         
         self.destroyer = pygame.image.load("destroyer.png").convert_alpha()
         self.destroyer = pygame.transform.scale(self.destroyer, (2 * instance.cube_size(), instance.cube_size()))
@@ -32,16 +32,28 @@ class Drawer():
         self.carrier_invalid = self.carrier.copy()
         self.battleship_invalid = self.battleship.copy()
         self.cruiser_invalid = self.cruiser.copy()
-        self.submarime_invalid = self.submarime.copy()
+        self.submarine_invalid = self.submarine.copy()
         self.destroyer_invalid = self.destroyer.copy()
+        
+        self.carrier_selected = self.carrier.copy()
+        self.battleship_selected = self.battleship.copy()
+        self.cruiser_selected = self.cruiser.copy()
+        self.submarine_selected = self.submarine.copy()
+        self.destroyer_selected = self.destroyer.copy()
         
         self.selector = Surface((1010, 400), pygame.SRCALPHA, 32).convert_alpha()
                 
         bataillenavale.colorizer.create_invalid(self.carrier_invalid)
         bataillenavale.colorizer.create_invalid(self.battleship_invalid)
         bataillenavale.colorizer.create_invalid(self.cruiser_invalid)
-        bataillenavale.colorizer.create_invalid(self.submarime_invalid)
+        bataillenavale.colorizer.create_invalid(self.submarine_invalid)
         bataillenavale.colorizer.create_invalid(self.destroyer_invalid)
+        
+        bataillenavale.colorizer.create_selected(self.carrier_selected)
+        bataillenavale.colorizer.create_selected(self.battleship_selected)
+        bataillenavale.colorizer.create_selected(self.cruiser_selected)
+        bataillenavale.colorizer.create_selected(self.submarine_selected)
+        bataillenavale.colorizer.create_selected(self.destroyer_selected)
 
     def drawBoatAtPosition(self, window, mouseX, mouseY, boat_type, direction):
         place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
@@ -63,12 +75,42 @@ class Drawer():
         
         window.blit(texture, (place_pos_x, place_pos_y))
     
-    def drawBoatSelector(self, window):
-        self.selector.blit(self.carrier, (10, 10))
-        self.selector.blit(self.battleship, (10, 65))
-        self.selector.blit(self.cruiser, (10, 120))
-        self.selector.blit(self.submarime, (510, 10))
-        self.selector.blit(self.destroyer, (520, 65))
+    def drawBoatSelector(self, window, instance):
+        carrier_text = self.carrier
+        if (instance.get_current_player().get_boat_count(BOAT_CARRIER) >= instance.rules.get_boat_limit(BOAT_CARRIER)):
+            carrier_text = self.carrier_invalid
+        elif (instance.selected_boat_type == BOAT_CARRIER):
+            carrier_text = self.carrier_selected
+        
+        battleship_text = self.battleship
+        if (instance.get_current_player().get_boat_count(BOAT_BATTLESHIP) >= instance.rules.get_boat_limit(BOAT_BATTLESHIP)):
+            battleship_text = self.battleship_invalid
+        elif (instance.selected_boat_type == BOAT_BATTLESHIP):
+            battleship_text = self.battleship_selected
+
+        cruiser_text = self.cruiser
+        if (instance.get_current_player().get_boat_count(BOAT_CRUISER) >= instance.rules.get_boat_limit(BOAT_CRUISER)):
+            cruiser_text = self.cruiser_invalid
+        elif (instance.selected_boat_type == BOAT_CRUISER):
+            cruiser_text = self.cruiser_selected
+
+        submarine_text = self.submarine
+        if (instance.get_current_player().get_boat_count(BOAT_SUBMARINE) >= instance.rules.get_boat_limit(BOAT_SUBMARINE)):
+            submarine_text = self.submarine_invalid
+        elif (instance.selected_boat_type == BOAT_SUBMARINE):
+            submarine_text = self.submarine_selected
+
+        destroyer_text = self.destroyer
+        if (instance.get_current_player().get_boat_count(BOAT_DESTROYER) >= instance.rules.get_boat_limit(BOAT_DESTROYER)):
+            destroyer_text = self.destroyer_invalid
+        elif (instance.selected_boat_type == BOAT_DESTROYER):
+            destroyer_text = self.destroyer_selected
+
+        self.selector.blit(carrier_text, (10, 10))
+        self.selector.blit(battleship_text, (10, 65))
+        self.selector.blit(cruiser_text, (10, 130))
+        self.selector.blit(submarine_text, (510, 10))
+        self.selector.blit(destroyer_text, (510, 65))
         window.blit(self.selector, self.boat_selector_pos)
         
     def drawBoard(self, window, instance):
@@ -91,7 +133,7 @@ class Drawer():
         elif (boat_type == BOAT_CRUISER):
             return self.cruiser if valid else self.cruiser_invalid
         elif (boat_type == BOAT_SUBMARINE):
-            return self.submarime if valid else self.submarime_invalid
+            return self.submarine if valid else self.submarine_invalid
         elif (boat_type == BOAT_DESTROYER):
             return self.destroyer if valid else self.destroyer_invalid
 

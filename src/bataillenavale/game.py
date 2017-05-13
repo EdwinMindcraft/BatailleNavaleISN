@@ -87,7 +87,7 @@ class Game():
                     self.selected_boat_type = BOAT_BATTLESHIP
                 elif (pos_y > 130 and pos_y < 185):
                     self.selected_boat_type = BOAT_CRUISER
-            elif (pos_x > 520 and pos_x < 755):
+            elif (pos_x > 510 and pos_x < 755):
                 if (pos_y > 10 and pos_y < 55):
                     self.selected_boat_type = BOAT_SUBMARINE
                 elif (pos_y > 65 and pos_y < 120):
