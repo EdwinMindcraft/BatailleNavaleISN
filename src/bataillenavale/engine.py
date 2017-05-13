@@ -198,11 +198,11 @@ class Player():
     
     def should_switch(self):
         carrier_left = self.rules.get_boat_limit(BOAT_CARRIER) - self.carrier_placed
-        battleship_left = self.rules.get_boat_limit(BOAT_BATTLESHIP) - self.carrier_placed
-        cruiser_left = self.rules.get_boat_limit(BOAT_CRUISER) - self.carrier_placed
-        destroyer_left = self.rules.get_boat_limit(BOAT_DESTROYER) - self.carrier_placed
-        submarine_left = self.rules.get_boat_limit(BOAT_SUBMARINE) - self.carrier_placed
-        return carrier_left == 0 and battleship_left == 0 and cruiser_left == 0 and destroyer_left == 0 and submarine_left == 0
+        battleship_left = self.rules.get_boat_limit(BOAT_BATTLESHIP) - self.battleship_placed
+        cruiser_left = self.rules.get_boat_limit(BOAT_CRUISER) - self.cruiser_placed
+        destroyer_left = self.rules.get_boat_limit(BOAT_DESTROYER) - self.destroyer_placed
+        submarine_left = self.rules.get_boat_limit(BOAT_SUBMARINE) - self.submarine_placed
+        return carrier_left <= 0 and battleship_left <= 0 and cruiser_left <= 0 and destroyer_left <= 0 and submarine_left <= 0
     
     def has_boat_left(self):
         for x in range(len(self.grid)):

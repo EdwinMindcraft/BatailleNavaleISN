@@ -95,6 +95,12 @@ class Game():
             return
         if (self.is_placing):
             self.place_boat_at(self.selected_boat_type, mouse_x, mouse_y)
+            if (self.get_current_player().should_switch()):
+                if (self.turn == PLAYER_1):
+                    self.turn = PLAYER_2
+                else:
+                    self.turn = PLAYER_1
+                    self.is_placing = False
             return
         x = self.snap(mouse_x)
         y = self.snap(mouse_y)
@@ -107,6 +113,13 @@ class Game():
         if player.opponent_grid[x][y] != NULL:
             return
         player.attack(other, (x, y))
+        if (self.is_won() != NULL):
+            #FIXME Do Something
+            raise NotImplementedError()
+        if self.turn == PLAYER_1:
+            self.turn = PLAYER_2
+        else:
+            self.turn = PLAYER_1
     
     def place_boat_at(self, boat_type, mouse_x, mouse_y):
         x = self.snap(mouse_x)

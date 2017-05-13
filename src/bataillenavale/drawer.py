@@ -5,7 +5,7 @@ from bataillenavale import engine
 import bataillenavale.colorizer
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
     DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, \
-    BOAT_DESTROYER
+    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED
 
 
 class Drawer():
@@ -29,6 +29,15 @@ class Drawer():
         self.destroyer = pygame.image.load("destroyer.png").convert_alpha()
         self.destroyer = pygame.transform.scale(self.destroyer, (2 * instance.cube_size(), instance.cube_size()))
         
+        self.hit = pygame.image.load("hit.png").convert_alpha()
+        self.hit = pygame.transform.scale(self.hit, (instance.cube_size(), instance.cube_size()))
+        
+        self.miss = pygame.image.load("miss.png").convert_alpha()
+        self.miss = pygame.transform.scale(self.miss, (instance.cube_size(), instance.cube_size()))
+        
+        self.destroyed = pygame.image.load("destroyed.png").convert_alpha()
+        self.destroyed = pygame.transform.scale(self.destroyed, (instance.cube_size(), instance.cube_size()))
+      
         self.carrier_invalid = self.carrier.copy()
         self.battleship_invalid = self.battleship.copy()
         self.cruiser_invalid = self.cruiser.copy()
@@ -114,17 +123,31 @@ class Drawer():
         window.blit(self.selector, self.boat_selector_pos)
         
     def drawBoard(self, window, instance):
-        for pos in instance.get_current_player().carrier_pos:
-            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CARRIER, pos[1], True)
-        for pos in instance.get_current_player().battleship_pos:
-            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_BATTLESHIP, pos[1], True)
-        for pos in instance.get_current_player().cruiser_pos:
-            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CRUISER, pos[1], True)
-        for pos in instance.get_current_player().submarine_pos:
-            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_SUBMARINE, pos[1], True)
-        for pos in instance.get_current_player().destroyer_pos:
-            self.draw_int(window, self.render_offset[0] + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_DESTROYER, pos[1], True)
-    
+        player = instance.get_current_player()
+        offset_x = 0 if instance.is_placing else instance.grid_scale + self.render_offset[0] * 2
+        for pos in player.carrier_pos:
+            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CARRIER, pos[1], True)
+        for pos in player.battleship_pos:
+            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_BATTLESHIP, pos[1], True)
+        for pos in player.cruiser_pos:
+            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CRUISER, pos[1], True)
+        for pos in player.submarine_pos:
+            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_SUBMARINE, pos[1], True)
+        for pos in player.destroyer_pos:
+            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_DESTROYER, pos[1], True)
+        
+        for x in range(0, len(player.opponent_grid)):
+            for y in range(0, len(player.opponent_grid[x])):
+                if (player.opponent_grid[x][y] == HIT_SUCCESS):
+                    window.blit(self.hit, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+                elif (player.opponent_grid[x][y] == HIT_MISS):
+                    window.blit(self.miss, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+                
+        for x in range(0, len(player.grid)):
+            for y in range(0, len(player.grid[x])):
+                if (player.grid[x][y] == DESTROYED):
+                    window.blit(self.destroyed, (self.render_offset[0] * 3 + instance.grid_scale + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+   
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
             return self.carrier if valid else self.carrier_invalid
