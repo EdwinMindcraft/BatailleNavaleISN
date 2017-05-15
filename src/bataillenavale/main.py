@@ -7,6 +7,7 @@ from bataillenavale.drawer import Drawer
 
 
 def run_game():
+    
     render_offset = (10, 60)
     place_grid_position = (10, 560)
     
@@ -89,29 +90,31 @@ def run_game():
             
             window.blit(drawables[10 + i], (render_offset[0] + instance.cube_size() * (i + 1), render_offset[1]))
             window.blit(drawables[10 + i], (render_offset[0] * 3 + grid_size + instance.cube_size() * (i + 1), render_offset[1]))
-
-#         window.blit(drawable_a, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 1))
-#         window.blit(drawable_b, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 2))
-#         window.blit(drawable_c, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 3))
-#         window.blit(drawable_d, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 4))
-#         window.blit(drawable_e, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 5))
-#         window.blit(drawable_f, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 6))
-#         window.blit(drawable_g, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 7))
-#         window.blit(drawable_h, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 8))
-#         window.blit(drawable_i, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 9))
-#         window.blit(drawable_j, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 10))
-#         
-#         window.blit(drawable_1, (render_offset[0] * 3 + grid_size + instance.cube_size() * 1, render_offset[1]))
-#         window.blit(drawable_2, (render_offset[0] * 3 + grid_size + instance.cube_size() * 2, render_offset[1]))
-#         window.blit(drawable_3, (render_offset[0] * 3 + grid_size + instance.cube_size() * 3, render_offset[1]))
-#         window.blit(drawable_4, (render_offset[0] * 3 + grid_size + instance.cube_size() * 4, render_offset[1]))
-#         window.blit(drawable_5, (render_offset[0] * 3 + grid_size + instance.cube_size() * 5, render_offset[1]))
-#         window.blit(drawable_6, (render_offset[0] * 3 + grid_size + instance.cube_size() * 6, render_offset[1]))
-#         window.blit(drawable_7, (render_offset[0] * 3 + grid_size + instance.cube_size() * 7, render_offset[1]))
-#         window.blit(drawable_8, (render_offset[0] * 3 + grid_size + instance.cube_size() * 8, render_offset[1]))
-#         window.blit(drawable_9, (render_offset[0] * 3 + grid_size + instance.cube_size() * 9, render_offset[1]))
-#         window.blit(drawable_10, (render_offset[0] * 3 + grid_size + instance.cube_size() * 10, render_offset[1]))
+        """
+        CODE OBSOLETE.
         
+        window.blit(drawable_a, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 1))
+        window.blit(drawable_b, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 2))
+        window.blit(drawable_c, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 3))
+        window.blit(drawable_d, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 4))
+        window.blit(drawable_e, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 5))
+        window.blit(drawable_f, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 6))
+        window.blit(drawable_g, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 7))
+        window.blit(drawable_h, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 8))
+        window.blit(drawable_i, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 9))
+        window.blit(drawable_j, (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * 10))
+        
+        window.blit(drawable_1, (render_offset[0] * 3 + grid_size + instance.cube_size() * 1, render_offset[1]))
+        window.blit(drawable_2, (render_offset[0] * 3 + grid_size + instance.cube_size() * 2, render_offset[1]))
+        window.blit(drawable_3, (render_offset[0] * 3 + grid_size + instance.cube_size() * 3, render_offset[1]))
+        window.blit(drawable_4, (render_offset[0] * 3 + grid_size + instance.cube_size() * 4, render_offset[1]))
+        window.blit(drawable_5, (render_offset[0] * 3 + grid_size + instance.cube_size() * 5, render_offset[1]))
+        window.blit(drawable_6, (render_offset[0] * 3 + grid_size + instance.cube_size() * 6, render_offset[1]))
+        window.blit(drawable_7, (render_offset[0] * 3 + grid_size + instance.cube_size() * 7, render_offset[1]))
+        window.blit(drawable_8, (render_offset[0] * 3 + grid_size + instance.cube_size() * 8, render_offset[1]))
+        window.blit(drawable_9, (render_offset[0] * 3 + grid_size + instance.cube_size() * 9, render_offset[1]))
+        window.blit(drawable_10, (render_offset[0] * 3 + grid_size + instance.cube_size() * 10, render_offset[1]))
+        """
         #On dessine le bateau selectionne si la souris est sur la premiere grille et que l'on est dans le mode initialisation
         if (instance.is_placing and prev_mouse_x - render_offset[0] > 0 and prev_mouse_x - render_offset[0] < grid_size and prev_mouse_y -render_offset[1] > 0 and prev_mouse_y - render_offset[1] < grid_size):
             drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)

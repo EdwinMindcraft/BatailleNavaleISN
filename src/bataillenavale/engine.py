@@ -1,3 +1,8 @@
+"""
+Variables Globales.
+Elle permettent de rendre le code plus digeste.
+On pourrais en theorie les remplaces par leurs nombres respectif mais ce serais illisible.
+"""
 NULL = (0)
 BOAT = (1)
 DESTROYED = (2)
@@ -16,7 +21,10 @@ PLAYER_1 = (14)
 PLAYER_2 = (15)
 HIT_DESTROYED = (16)
 
-
+"""
+Les regles.
+Pas tres utiles, mais elle permettents une plus grande simplicite
+"""
 class Rules():
     def __init__(self):
         self.carrier_count = 1
@@ -24,7 +32,9 @@ class Rules():
         self.cruiser_count = 1
         self.submarine_count = 1
         self.destroyer_count = 1
-    
+    """
+    Definit la limite de bateau d'un type.
+    """
     def set_boat_limit(self, boat_type, count):
         if (boat_type == BOAT_CARRIER):
             self.carrier_count = count
@@ -36,7 +46,9 @@ class Rules():
             self.submarine_count = count
         elif (boat_type == BOAT_DESTROYER):
             self.destroyer_count = count
-    
+    """
+    Recupere le nombre maximum de bateau d'un type.
+    """
     def get_boat_limit(self, boat_type):
         if (boat_type == BOAT_CARRIER):
             return self.carrier_count
@@ -85,7 +97,9 @@ class Player():
         self.cruiser_pos = []
         self.submarine_pos = []
         self.destroyer_pos = []
-        
+    """
+    Place un bataux a la position ciblee.
+    """
     def place_boat(self, position, boat_type, direction):
         if not self.can_place_boat_at(position, boat_type, direction):
             return
@@ -124,7 +138,9 @@ class Player():
         for i in range(0, size):
             target = (position[0] + (x_offset * i), position[1] + (y_offset * i))
             self.grid[target[0]][target[1]] = BOAT
-    
+    """
+    Recupere le nombre de bateaux d'un type places.
+    """
     def get_boat_count(self, boat_type):
         if (boat_type == BOAT_CARRIER):
             return self.carrier_placed
@@ -138,7 +154,9 @@ class Player():
             return self.destroyer_placed
         else:
             return 0
-        
+    """
+    Verifie que l'on peut bien placer un bateau la ou on veut
+    """
     def can_place_boat_at(self, position, boat_type, direction):
         if (self.rules.get_boat_limit(boat_type) <= self.get_boat_count(boat_type)):
             return False
@@ -166,7 +184,9 @@ class Player():
             if not self.can_place_at(target):
                 return False
         return True
-    
+    """
+    Verifie que la case ciblee est vide.
+    """
     def can_place_at(self, position):
         if len(position) != 2:
             return False
@@ -175,7 +195,10 @@ class Player():
         if position[1] < 0 or position[1] > 9:
             return False
         return self.grid[position[0]][position[1]] == NULL
-    
+    """
+    A L'ATTAQUE!
+    Plus serieusement cette fonction permet d'attaquer une case.
+    """
     def attack(self, other, position = (0, 0)):
         if len(position) != 2:
             return
@@ -190,6 +213,9 @@ class Player():
         else:
             self.opponent_grid[position[0]][position[1]] = attack[0]
     
+    """
+    On gere l'attaque du cote de la personne qui se fait attaquer.
+    """
     def handle_attack(self, position):
         if len(position) != 2:
             return
@@ -318,7 +344,10 @@ class Player():
             return (HIT_SUCCESS, [])
         else:
             return (HIT_MISS, [])
-    
+    """
+    Cette fonction est utilisee une seule fois mais le code est tellement moche que c'est deja trop.
+    Elle sert a verifier si le 2nd joueur peut commencer a placer ses bateaux.
+    """
     def should_switch(self):
         carrier_left = self.rules.get_boat_limit(BOAT_CARRIER) - self.carrier_placed
         battleship_left = self.rules.get_boat_limit(BOAT_BATTLESHIP) - self.battleship_placed
@@ -326,7 +355,10 @@ class Player():
         destroyer_left = self.rules.get_boat_limit(BOAT_DESTROYER) - self.destroyer_placed
         submarine_left = self.rules.get_boat_limit(BOAT_SUBMARINE) - self.submarine_placed
         return carrier_left <= 0 and battleship_left <= 0 and cruiser_left <= 0 and destroyer_left <= 0 and submarine_left <= 0
-    
+    """
+    Pour savoir si on a gagne, il vaut mieux savoir s'il reste des bateaux a l'adversaire.
+    Parce que si on ne sait pas, on peut pas gagner.
+    """
     def has_boat_left(self):
         for x in range(len(self.grid)):
             for y in range(len(self.grid[x])):
