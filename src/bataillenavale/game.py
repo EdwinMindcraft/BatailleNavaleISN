@@ -77,9 +77,9 @@ class Game():
             return self.player_2.can_place_boat_at((x, y), boat_type, self.rotation)
         
     def handle_play(self, mouse_x, mouse_y):
-        if (mouse_x > self.boat_selector_pos[0] and mouse_x < self.boat_selector_pos[0] + 1020 and mouse_y > self.boat_selector_pos[1] and mouse_y < self.boat_selector_pos[1] + 500):
-            pos_x = mouse_x - self.boat_selector_pos[0]
-            pos_y = mouse_y - self.boat_selector_pos[1]
+        if (mouse_x > self.boat_selector_pos[0] and mouse_x < self.boat_selector_pos[0] + 1020 and mouse_y + 60 > self.boat_selector_pos[1] and mouse_y < self.boat_selector_pos[1] + 200):
+            pos_x = mouse_x - self.boat_selector_pos[0] + 10
+            pos_y = mouse_y - self.boat_selector_pos[1] + 60
             if (pos_x > 10 and pos_x < 235):
                 if (pos_y > 10 and pos_y < 55):
                     self.selected_boat_type = BOAT_CARRIER

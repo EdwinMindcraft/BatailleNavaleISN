@@ -14,6 +14,8 @@ BOAT_SUBMARINE = (12) #Sous-Marin (3 cases)
 BOAT_DESTROYER = (13) #Torpilleur (2 cases)
 PLAYER_1 = (14)
 PLAYER_2 = (15)
+HIT_DESTROYED = (16)
+
 
 class Rules():
     def __init__(self):
@@ -181,7 +183,12 @@ class Player():
             return
         if position[1] < 0 or position[1] > 9:
             return
-        self.opponent_grid[position[0]][position[1]] = other.handle_attack(position)
+        attack = other.handle_attack(position);
+        if attack[0] == HIT_DESTROYED:
+            for loc in attack[1]:
+                self.opponent_grid[loc[0]][loc[1]] = HIT_DESTROYED
+        else:
+            self.opponent_grid[position[0]][position[1]] = attack[0]
     
     def handle_attack(self, position):
         if len(position) != 2:
@@ -192,9 +199,125 @@ class Player():
             return
         if (self.grid[position[0]][position[1]] == BOAT):
             self.grid[position[0]][position[1]] = DESTROYED
-            return HIT_SUCCESS
+            #Carrier
+            for pos in self.carrier_pos:
+                location = pos[0]
+                direction = pos[1]
+                x_offset = 0
+                y_offset = 0
+                if direction == DIRECTION_UP:
+                    y_offset = -1
+                elif direction == DIRECTION_DOWN:
+                    y_offset = 1
+                elif direction == DIRECTION_LEFT:
+                    x_offset = -1
+                elif direction == DIRECTION_RIGHT:
+                    x_offset = 1
+                destroyed = True;
+                locs = []
+                for i in range(0, 5):
+                    newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
+                    locs.append(newLoc)
+                    if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
+                        destroyed = False;
+                if destroyed:
+                    return (HIT_DESTROYED, locs)
+            #Battleship
+            for pos in self.battleship_pos:
+                location = pos[0]
+                direction = pos[1]
+                x_offset = 0
+                y_offset = 0
+                if direction == DIRECTION_UP:
+                    y_offset = -1
+                elif direction == DIRECTION_DOWN:
+                    y_offset = 1
+                elif direction == DIRECTION_LEFT:
+                    x_offset = -1
+                elif direction == DIRECTION_RIGHT:
+                    x_offset = 1
+                destroyed = True;
+                locs = []
+                for i in range(0, 4):
+                    newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
+                    locs.append(newLoc)
+                    if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
+                        destroyed = False;
+                if destroyed:
+                    return (HIT_DESTROYED, locs)
+            #Cruiser
+            for pos in self.cruiser_pos:
+                location = pos[0]
+                direction = pos[1]
+                x_offset = 0
+                y_offset = 0
+                if direction == DIRECTION_UP:
+                    y_offset = -1
+                elif direction == DIRECTION_DOWN:
+                    y_offset = 1
+                elif direction == DIRECTION_LEFT:
+                    x_offset = -1
+                elif direction == DIRECTION_RIGHT:
+                    x_offset = 1
+                destroyed = True;
+                locs = []
+                for i in range(0, 3):
+                    newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
+                    locs.append(newLoc)
+                    if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
+                        destroyed = False;
+                if destroyed:
+                    return (HIT_DESTROYED, locs)
+            #Submarine
+            for pos in self.submarine_pos:
+                location = pos[0]
+                direction = pos[1]
+                x_offset = 0
+                y_offset = 0
+                if direction == DIRECTION_UP:
+                    y_offset = -1
+                elif direction == DIRECTION_DOWN:
+                    y_offset = 1
+                elif direction == DIRECTION_LEFT:
+                    x_offset = -1
+                elif direction == DIRECTION_RIGHT:
+                    x_offset = 1
+                destroyed = True;
+                locs = []
+                for i in range(0, 3):
+                    newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
+                    locs.append(newLoc)
+                    if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
+                        destroyed = False;
+                if destroyed:
+                    return (HIT_DESTROYED, locs)
+            #Destroyer
+            for pos in self.destroyer_pos:
+                location = pos[0]
+                direction = pos[1]
+                x_offset = 0
+                y_offset = 0
+                if direction == DIRECTION_UP:
+                    y_offset = -1
+                elif direction == DIRECTION_DOWN:
+                    y_offset = 1
+                elif direction == DIRECTION_LEFT:
+                    x_offset = -1
+                elif direction == DIRECTION_RIGHT:
+                    x_offset = 1
+                destroyed = True;
+                locs = []
+                for i in range(0, 2):
+                    newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
+                    locs.append(newLoc)
+                    if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
+                        destroyed = False;
+                if destroyed:
+                    return (HIT_DESTROYED, locs)
+                
+            return (HIT_SUCCESS, [])
         else:
-            return HIT_MISS
+            return (HIT_MISS, [])
     
     def should_switch(self):
         carrier_left = self.rules.get_boat_limit(BOAT_CARRIER) - self.carrier_placed

@@ -5,7 +5,7 @@ from bataillenavale import engine
 import bataillenavale.colorizer
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
     DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, \
-    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED
+    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED, HIT_DESTROYED
 
 
 class Drawer():
@@ -50,7 +50,7 @@ class Drawer():
         self.submarine_selected = self.submarine.copy()
         self.destroyer_selected = self.destroyer.copy()
         
-        self.selector = Surface((1010, 400), pygame.SRCALPHA, 32).convert_alpha()
+        self.selector = Surface((1020, 400), pygame.SRCALPHA, 32).convert_alpha()
                 
         bataillenavale.colorizer.create_invalid(self.carrier_invalid)
         bataillenavale.colorizer.create_invalid(self.battleship_invalid)
@@ -68,7 +68,7 @@ class Drawer():
         place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
         place_pos_y = self.instance.snap(mouseY - self.render_offset[1]) * self.instance.cube_size() + self.render_offset[1] + self.instance.cube_size()
     
-        canPlace = self.instance.can_place_boat(boat_type, place_pos_x, place_pos_y)
+        canPlace = self.instance.can_place_boat(boat_type, place_pos_x, place_pos_y - self.instance.cube_size())
         self.draw_int(window, place_pos_x, place_pos_y, boat_type, direction, canPlace)
     
     def draw_int(self, window, place_pos_x, place_pos_y, boat_type, direction, canPlace):
@@ -114,7 +114,13 @@ class Drawer():
             destroyer_text = self.destroyer_invalid
         elif (instance.selected_boat_type == BOAT_DESTROYER):
             destroyer_text = self.destroyer_selected
-
+            
+            
+        self.selector.blit(Surface((1, 185)), (0, 0))
+        self.selector.blit(Surface((instance.grid_scale * 2 + self.render_offset[0] * 2, 1)), (0, 0))
+        self.selector.blit(Surface((1, 185)), (instance.grid_scale * 2 + self.render_offset[0] * 2, 0))
+        self.selector.blit(Surface((instance.grid_scale * 2 + self.render_offset[0] * 2 + 1, 1)), (0, 185))
+        
         self.selector.blit(carrier_text, (10, 10))
         self.selector.blit(battleship_text, (10, 65))
         self.selector.blit(cruiser_text, (10, 130))
@@ -142,6 +148,8 @@ class Drawer():
                     window.blit(self.hit, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
                 elif (player.opponent_grid[x][y] == HIT_MISS):
                     window.blit(self.miss, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+                elif (player.opponent_grid[x][y] == HIT_DESTROYED):
+                    window.blit(self.destroyed, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
                 
         for x in range(0, len(player.grid)):
             for y in range(0, len(player.grid[x])):
