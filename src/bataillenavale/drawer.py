@@ -9,11 +9,11 @@ from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
 
 
 class Drawer():
-    """
-    instance: Instance de Game, correspont au données du jeu.
-    render_offset: Decalage des grilles par rapport au haut de la fenetre (format: x, y)
-    boat_selector_pos: Decalage du panneau de selection des bateaux par rapport au haut de la fenetre (format: x, y)
-    """
+    
+    #instance: Instance de Game, correspont au données du jeu.
+    #render_offset: Decalage des grilles par rapport au haut de la fenetre (format: x, y)
+    #boat_selector_pos: Decalage du panneau de selection des bateaux par rapport au haut de la fenetre (format: x, y)
+    
     def __init__(self, instance, render_offset, boat_selector_pos):
         #Declaration de variable
         self.instance = instance
@@ -82,14 +82,14 @@ class Drawer():
         #Surface pour le selecteur
         self.selector = Surface((1020, 400), pygame.SRCALPHA, 32).convert_alpha()
         
-    """
-    Dessine un bateau a la position choisie
-    window: La fenetre du selecteur.
-    mouseX: Position en X de la souris
-    mouseY: Position en Y de la souris
-    boat_type: Type de bateau
-    direction: Orientation du bateau
-    """
+    
+    #Dessine un bateau a la position choisie
+    #window: La fenetre du selecteur.
+    #mouseX: Position en X de la souris
+    #mouseY: Position en Y de la souris
+    #boat_type: Type de bateau
+    #direction: Orientation du bateau
+    
     def drawBoatAtPosition(self, window, mouseX, mouseY, boat_type, direction):
         #Force les postions pour rentrer dans la grille.
         place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
@@ -100,9 +100,9 @@ class Drawer():
         #On dessine le bateau
         self.draw_int(window, place_pos_x, place_pos_y, boat_type, direction, canPlace)
     
-    """
-    Fonction interne pour dessiner le bateau, evite les positions forcés de drawBoatAtPosition
-    """
+    
+    #Fonction interne pour dessiner le bateau, evite les positions forcés de drawBoatAtPosition
+    
     def draw_int(self, window, place_pos_x, place_pos_y, boat_type, direction, canPlace):
         texture = self.getBoatTexture(boat_type, canPlace)
         if (direction == DIRECTION_UP):
@@ -116,15 +116,15 @@ class Drawer():
         
         window.blit(texture, (place_pos_x, place_pos_y))
     
-    """
-    Dessine le selecteur de bateau.
     
-    Le format est le meme:
-    Pour chaque bateau, on choisie la texture.
-    En priotite le bateaux invalide, puis le selectionne et enfin celui sans rien.
+    #Dessine le selecteur de bateau.
+    #
+    #Le format est le meme:
+    #Pour chaque bateau, on choisie la texture.
+    #En priotite le bateaux invalide, puis le selectionne et enfin celui sans rien.
+    #
+    #Ensuite on dessine les bordures, puis les bateaux.
     
-    Ensuite on dessine les bordures, puis les bateaux.
-    """
     def drawBoatSelector(self, window, instance):
         carrier_text = self.carrier
         if (instance.get_current_player().get_boat_count(BOAT_CARRIER) >= instance.rules.get_boat_limit(BOAT_CARRIER)):
@@ -170,9 +170,7 @@ class Drawer():
         #On "colle" le selecteur sur la fenetre.
         window.blit(self.selector, self.boat_selector_pos)
     
-    """
-    Dessine le terrain de jeu (bateau + effets)
-    """
+    #Dessine le terrain de jeu (bateau + effets)
     def drawBoard(self, window, instance):
         #On recupere le joueur.
         player = instance.get_current_player()
@@ -209,10 +207,9 @@ class Drawer():
                 #Si la case a pris un coup, on met des flammes.
                 if (player.grid[x][y] == DESTROYED):
                     window.blit(self.destroyed, (self.render_offset[0] * 3 + instance.grid_scale + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
-    """
-    Cette methode permet de ne pas perdre 300 ans a reecrire 20000 fois les memes lignes de code.
-    Elle permet d'obtenir facilement la texture d'un bateau.
-    """
+                    
+    #Cette methode permet de ne pas perdre 300 ans a reecrire 20000 fois les memes lignes de code.
+    #Elle permet d'obtenir facilement la texture d'un bateau.
     def getBoatTexture (self, boat_type, valid):
         if (boat_type == BOAT_CARRIER):
             return self.carrier if valid else self.carrier_invalid
