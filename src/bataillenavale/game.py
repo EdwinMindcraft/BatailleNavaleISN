@@ -12,6 +12,7 @@ class Game():
         self.player_1 = engine.Player(rules)
         self.player_2 = engine.Player(rules)
         self.is_placing = True
+        self.locked = False
         self.turn = engine.PLAYER_1
         self.selected_boat_type = BOAT_CARRIER
         self.grid_scale = grid_scale
@@ -101,6 +102,8 @@ class Game():
     Soit on peut tirer sur une case.
     """
     def handle_play(self, mouse_x, mouse_y):
+        if (self.locked):
+            return
         if (mouse_x > self.boat_selector_pos[0] and mouse_x < self.boat_selector_pos[0] + 1020 and mouse_y + 60 > self.boat_selector_pos[1] and mouse_y < self.boat_selector_pos[1] + 200):
             pos_x = mouse_x - self.boat_selector_pos[0] + 10
             pos_y = mouse_y - self.boat_selector_pos[1] + 60

@@ -3,9 +3,10 @@ from pygame.surface import Surface
 
 from bataillenavale import engine
 import bataillenavale.colorizer
+import time
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
     DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, \
-    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED, HIT_DESTROYED
+    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED, PLAYER_1, HIT_DESTROYED
 
 
 class Drawer():
@@ -19,6 +20,8 @@ class Drawer():
         self.instance = instance
         self.render_offset = render_offset
         self.boat_selector_pos = boat_selector_pos
+        self.lastTime = -1;
+        self.current_player = PLAYER_1
         
         #Creation des image
         #Porte-Avion
@@ -173,7 +176,17 @@ class Drawer():
     #Dessine le terrain de jeu (bateau + effets)
     def drawBoard(self, window, instance):
         #On recupere le joueur.
-        player = instance.get_current_player()
+        if (self.current_player != instance.turn):
+            if (self.lastTime == -1):
+                self.lastTime = time.time()
+                print("Time : " + str(self.lastTime))
+                instance.locked = True
+            if (self.lastTime + 5 < time.time()):
+                self.lastTime = -1
+                print ("Updating screen : " + str(time.time()))
+                self.current_player = instance.turn
+                instance.locked = False
+        player = instance.player_1 if self.current_player == PLAYER_1 else instance.player_2
         #Si on est en train de placer les bateaux, on affiche les bateaux sur la grille de gauche.
         #Sinon on les affiche sur la grille de droite.
         offset_x = 0 if instance.is_placing else instance.grid_scale + self.render_offset[0] * 2
