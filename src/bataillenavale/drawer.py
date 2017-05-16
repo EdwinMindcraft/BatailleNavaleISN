@@ -3,9 +3,10 @@ from pygame.surface import Surface
 
 from bataillenavale import engine
 import bataillenavale.colorizer
+import time
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
     DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, \
-    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED
+    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED, PLAYER_1
 
 
 class Drawer():
@@ -13,6 +14,8 @@ class Drawer():
         self.instance = instance
         self.render_offset = render_offset
         self.boat_selector_pos = boat_selector_pos
+        self.lastTime = -1;
+        self.current_player = PLAYER_1
         
         self.carrier = pygame.image.load("carrier.png").convert_alpha()
         self.carrier = pygame.transform.scale(self.carrier, (5 * instance.cube_size(), instance.cube_size()))
@@ -123,7 +126,17 @@ class Drawer():
         window.blit(self.selector, self.boat_selector_pos)
         
     def drawBoard(self, window, instance):
-        player = instance.get_current_player()
+        if (self.current_player != instance.turn):
+            if (self.lastTime == -1):
+                self.lastTime = time.time()
+                print("Time : " + str(self.lastTime))
+                instance.locked = True
+            if (self.lastTime + 5 < time.time()):
+                self.lastTime = -1
+                print ("Updating screen : " + str(time.time()))
+                self.current_player = instance.turn
+                instance.locked = False
+        player = instance.player_1 if self.current_player == PLAYER_1 else instance.player_2
         offset_x = 0 if instance.is_placing else instance.grid_scale + self.render_offset[0] * 2
         for pos in player.carrier_pos:
             self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CARRIER, pos[1], True)
