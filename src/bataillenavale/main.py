@@ -32,13 +32,13 @@ def run_game():
     #On nomme la fenetre
     pygame.display.set_caption("Bataille Navale")
     #On y met une icone
-    pygame.display.set_icon(pygame.image.load("bato.jpg"))
+    pygame.display.set_icon(pygame.image.load("drawables/bato.jpg"))
     
     #Variable de fermeture
     should_close = False
     
     #On charge l'arriere plan.
-    bg = pygame.image.load("mer.jpg").convert()
+    bg = pygame.image.load("drawables/mer.jpg").convert()
     #On lui donne la taille de la fenetre
     bg = pygame.transform.scale(bg, window.get_size())
     

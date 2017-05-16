@@ -11,7 +11,7 @@ from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
 
 class Drawer():
     
-    #instance: Instance de Game, correspont au données du jeu.
+    #instance: Instance de Game, correspont au donnees du jeu.
     #render_offset: Decalage des grilles par rapport au haut de la fenetre (format: x, y)
     #boat_selector_pos: Decalage du panneau de selection des bateaux par rapport au haut de la fenetre (format: x, y)
     
@@ -25,31 +25,31 @@ class Drawer():
         
         #Creation des image
         #Porte-Avion
-        self.carrier = pygame.image.load("carrier.png").convert_alpha()
+        self.carrier = pygame.image.load("drawables/carrier.png").convert_alpha()
         self.carrier = pygame.transform.scale(self.carrier, (5 * instance.cube_size(), instance.cube_size()))
         #Croiseur
-        self.battleship = pygame.image.load("battleship.png").convert_alpha()
+        self.battleship = pygame.image.load("drawables/battleship.png").convert_alpha()
         self.battleship = pygame.transform.scale(self.battleship, (4 * instance.cube_size(), instance.cube_size()))
         #Contre-Torpilleur
-        self.cruiser = pygame.image.load("cruiser.png").convert_alpha()
+        self.cruiser = pygame.image.load("drawables/cruiser.png").convert_alpha()
         self.cruiser = pygame.transform.scale(self.cruiser, (3 * instance.cube_size(), instance.cube_size()))
         #Sous-Marin
-        self.submarine = pygame.image.load("submarine.png").convert_alpha()
+        self.submarine = pygame.image.load("drawables/submarine.png").convert_alpha()
         self.submarine = pygame.transform.scale(self.submarine, (3 * instance.cube_size(), instance.cube_size()))
         #Torpilleur
-        self.destroyer = pygame.image.load("destroyer.png").convert_alpha()
+        self.destroyer = pygame.image.load("drawables/destroyer.png").convert_alpha()
         self.destroyer = pygame.transform.scale(self.destroyer, (2 * instance.cube_size(), instance.cube_size()))
         
         #Effet de touche.
-        self.hit = pygame.image.load("hit.png").convert_alpha()
+        self.hit = pygame.image.load("drawables/hit.png").convert_alpha()
         self.hit = pygame.transform.scale(self.hit, (instance.cube_size(), instance.cube_size()))
         
         #Effet lorque l'on rate
-        self.miss = pygame.image.load("miss.png").convert_alpha()
+        self.miss = pygame.image.load("drawables/miss.png").convert_alpha()
         self.miss = pygame.transform.scale(self.miss, (instance.cube_size(), instance.cube_size()))
         
         #Effet lorque qu'un bateau est detruit (Ennemi) ou quand un bateau subit des tir (Joueur)
-        self.destroyed = pygame.image.load("destroyed.png").convert_alpha()
+        self.destroyed = pygame.image.load("drawables/destroyed.png").convert_alpha()
         self.destroyed = pygame.transform.scale(self.destroyed, (instance.cube_size(), instance.cube_size()))
         
         #Versions rouge (invalides) des bateaux
@@ -104,7 +104,7 @@ class Drawer():
         self.draw_int(window, place_pos_x, place_pos_y, boat_type, direction, canPlace)
     
     
-    #Fonction interne pour dessiner le bateau, evite les positions forcés de drawBoatAtPosition
+    #Fonction interne pour dessiner le bateau, evite les positions forces de drawBoatAtPosition
     
     def draw_int(self, window, place_pos_x, place_pos_y, boat_type, direction, canPlace):
         texture = self.getBoatTexture(boat_type, canPlace)

@@ -7,6 +7,7 @@ eggs
 parts
 src/*.egg-info
 src/build
+src/dist
 lib
 lib64
 *.pyc
