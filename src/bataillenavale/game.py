@@ -18,6 +18,9 @@ class Game():
         self.grid_scale = grid_scale
         self.enable_borders = enable_borders
     
+    """
+    Est-ce que quelqu'un a gagne ?
+    """
     def is_won(self):
         if self.player_1.has_boat_left() and not self.player_2.has_boat_left():
             return PLAYER_1
@@ -25,10 +28,15 @@ class Game():
             return PLAYER_2
         else:
             return NULL
-    
+    """
+    Quel joueur est en train de jouer ?
+    """
     def get_current_player(self):
         return self.player_1 if self.turn == PLAYER_1 else self.player_2
     
+    """
+    Quelle est la taille de tel ou tel bateau ?
+    """
     def get_boat_size(self, boat_type):
         size = 0
         if boat_type == BOAT_CARRIER:
@@ -40,10 +48,15 @@ class Game():
         elif boat_type == BOAT_DESTROYER:
             size = 2
         return size
-    
+    """
+    Cette fonction permet de definir de maniere "controlle" la taille de la grille.
+    Dans d'autre language, toutes les variables ne sont pas visibles de tout le monde.
+    """
     def set_grid_size(self, size):
         self.grid_scale = size
-    
+    """
+    On change la rotation de placement.
+    """
     def cycle_rotation(self):
         if (self.rotation == DIRECTION_DOWN):
             self.rotation = DIRECTION_LEFT
@@ -53,18 +66,27 @@ class Game():
             self.rotation = DIRECTION_RIGHT
         else:
             self.rotation = DIRECTION_DOWN
-    
+    """
+    Donne la case a partir de deux acces a cette methode (un pour X, un pour Y)
+    """
     def snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
         return floor(num / size) - (1 if self.enable_borders else 0)
-    
+    """
+    Meme chose qu'au-dessus, sauf que c'est la position sur l'ecran de la case a la place.
+    """
     def render_snap(self, num):
         size = self.grid_scale / (11 if self.enable_borders else 10)
         return int(floor(num / size) * (size + (1 if self.enable_borders else 0)))
-    
+    """
+    Taille d'une case.
+    """
     def cube_size(self):
         return int(self.grid_scale / (11 if self.enable_borders else 10))
     
+    """
+    Est-ce que le joueur actif peut placer un bateau ?
+    """
     def can_place_boat(self, boat_type, mouse_x, mouse_y):
         x = self.snap(mouse_x)
         y = self.snap(mouse_y)
@@ -72,17 +94,19 @@ class Game():
             return False
         if (y < 0 or y > 9):
             return False
-        if (self.turn == PLAYER_1):
-            return self.player_1.can_place_boat_at((x, y), boat_type, self.rotation)
-        else:
-            return self.player_2.can_place_boat_at((x, y), boat_type, self.rotation)
-        
+        return self.get_current_player().can_place_boat_at((x, y), boat_type, self.rotation)
+    """
+    Gere ce qu'il se passe lorsque que l'on clique la fenetre.
+    Soit on peut selectionner un bateau.
+    Soit on peut placer un bateau.
+    Soit on peut tirer sur une case.
+    """
     def handle_play(self, mouse_x, mouse_y):
         if (self.locked):
             return
-        if (mouse_x > self.boat_selector_pos[0] and mouse_x < self.boat_selector_pos[0] + 1020 and mouse_y > self.boat_selector_pos[1] and mouse_y < self.boat_selector_pos[1] + 500):
-            pos_x = mouse_x - self.boat_selector_pos[0]
-            pos_y = mouse_y - self.boat_selector_pos[1]
+        if (mouse_x > self.boat_selector_pos[0] and mouse_x < self.boat_selector_pos[0] + 1020 and mouse_y + 60 > self.boat_selector_pos[1] and mouse_y < self.boat_selector_pos[1] + 200):
+            pos_x = mouse_x - self.boat_selector_pos[0] + 10
+            pos_y = mouse_y - self.boat_selector_pos[1] + 60
             if (pos_x > 10 and pos_x < 235):
                 if (pos_y > 10 and pos_y < 55):
                     self.selected_boat_type = BOAT_CARRIER
@@ -123,7 +147,9 @@ class Game():
             self.turn = PLAYER_2
         else:
             self.turn = PLAYER_1
-    
+    """
+    Place un bateau pour le joueur actif
+    """
     def place_boat_at(self, boat_type, mouse_x, mouse_y):
         x = self.snap(mouse_x)
         y = self.snap(mouse_y)
@@ -133,9 +159,6 @@ class Game():
             return False
         if not self.can_place_boat(boat_type, mouse_x, mouse_y):
             return False
-        if (self.turn == PLAYER_1):
-            self.player_1.place_boat((x, y), boat_type, self.rotation)
-        else:
-            self.player_2.place_boat((x, y), boat_type, self.rotation)
+        self.get_current_player().place_boat((x, y), boat_type, self.rotation)
         return True
         

@@ -1,2 +1,11 @@
 # BatailleNavaleISN
-You shouldn't look at this. It's bad, I hate python. All hail team projects when you can't use a language you actually know how to use.
+
+Projet d'ISN pour l'année 2016-2017.
+
+Pour ce qui est de la reapropiation et tout le bordel...
+
+Bah je m'en moque donc vous pouvait tout utiliser sans problemes.
+
+Mais si vous voulez des termes legaux regarder CC0.
+
+Elle est très bien cette license.
