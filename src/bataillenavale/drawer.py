@@ -192,15 +192,16 @@ class Drawer():
         #On passe a travers la grille adverse.
         for x in range(0, len(player.opponent_grid)):
             for y in range(0, len(player.opponent_grid[x])):
+                position = (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1)));
                 #Pour chaque coup reussi, on dessinne une explosion
                 if (player.opponent_grid[x][y] == HIT_SUCCESS):
-                    window.blit(self.hit, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+                    window.blit(self.hit, position)
                 #Les tirs rates sont representes par une croix
                 elif (player.opponent_grid[x][y] == HIT_MISS):
-                    window.blit(self.miss, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+                    window.blit(self.miss, position)
                 #Et les bateaux que l'on a detruit s'affiche en flame.
                 elif (player.opponent_grid[x][y] == HIT_DESTROYED):
-                    window.blit(self.destroyed, (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+                    window.blit(self.destroyed, position)
         #On passe a travers notre grille.
         for x in range(0, len(player.grid)):
             for y in range(0, len(player.grid[x])):

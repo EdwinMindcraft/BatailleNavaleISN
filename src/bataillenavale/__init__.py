@@ -1,4 +1,3 @@
-import pygame
 import bataillenavale.main
 
 #Initialisation et lancement par eclipse.
