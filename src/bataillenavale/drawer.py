@@ -1,7 +1,6 @@
 import pygame
 from pygame.surface import Surface
 
-from bataillenavale import engine
 import bataillenavale.colorizer
 import time
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \

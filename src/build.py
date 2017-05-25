@@ -13,11 +13,11 @@ setup(
 	data_files = Icons,
     options = {
 		'py2exe' : {
-			'includes': ['numpy', 'pygame'],
+			'includes': ['numpy', 'pygame', 'tkinter', 'socket', 'threading'],
 			'optimize': 2,
 			'skip_archive': False,
 			'compressed': True,
-			'bundle_files': 0, #Options 1 & 2 do not work on a 64bit system
+			'bundle_files': 2, #Options 1 & 2 do not work on a 64bit system
 			'dist_dir': 'dist',  # Put .exe in dist/
 			}
 		},                   

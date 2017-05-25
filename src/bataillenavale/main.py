@@ -5,9 +5,10 @@ from pygame.constants import *
 from bataillenavale import engine
 from bataillenavale import game
 from bataillenavale.drawer import Drawer
+from bataillenavale.engine import PLAYER_1
 
 
-def run_game(local=True, host=True, host_name=socket.gethostname()):
+def run_game(local=True, host=True, host_name=socket.gethostname(), launcher=None):
     
     render_offset = (10, 60)
     place_grid_position = (10, 560)
@@ -27,7 +28,7 @@ def run_game(local=True, host=True, host_name=socket.gethostname()):
             instance.initHost()
         else:
             instance.initClient(host_name)
-    
+
     
     #Calcul de la taille de la grille
     grid_size = instance.cube_size() * (11 if instance.enable_borders else 10)
@@ -62,7 +63,7 @@ def run_game(local=True, host=True, host_name=socket.gethostname()):
     #On creer le drawer, celui qui contient la majorite des choses a dessiner
     drawer = Drawer(instance, render_offset, place_grid_position)
     #On charge les lettres et les chiffres.
-    drawables = [0]*20
+    drawables = [0]*22
     
     drawables[0] = pygame.transform.scale(pygame.image.load("drawables/A.png"), (instance.cube_size(), instance.cube_size()))
     drawables[1] = pygame.transform.scale(pygame.image.load("drawables/B.png"), (instance.cube_size(), instance.cube_size()))
@@ -86,9 +87,19 @@ def run_game(local=True, host=True, host_name=socket.gethostname()):
     drawables[18] = pygame.transform.scale(pygame.image.load("drawables/9.png"), (instance.cube_size(), instance.cube_size()))
     drawables[19] = pygame.transform.scale(pygame.image.load("drawables/10.png"), (instance.cube_size(), instance.cube_size()))
     
+    drawables[20] = pygame.transform.scale(pygame.image.load("drawables/tour_j1.png"), (400, 60))
+    drawables[21] = pygame.transform.scale(pygame.image.load("drawables/tour_j2.png"), (400, 60))
+    
     #Ici on met a jour la fenetre.
     while not should_close:
+        if not launcher is None and not instance.client is None:
+            launcher.destroy()
+            launcher = None
         window.blit(bg, (0, 0)) #On dessine l'arriere plan
+        if (instance.turn == PLAYER_1):
+            window.blit(drawables[20], ((window.get_size()[0] - drawables[20].get_width()) / 2, 10))
+        else:
+            window.blit(drawables[21], ((window.get_size()[0] - drawables[21].get_width()) / 2, 10))            
         
         #On ecrit les lettres et les chiffres sur les 2 grilles
         for i in range(0, 10):
