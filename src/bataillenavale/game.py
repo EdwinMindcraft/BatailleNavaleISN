@@ -1,4 +1,4 @@
-from bataillenavale import engine
+from bataillenavale import engine, networking
 from bataillenavale.engine import DIRECTION_DOWN, PLAYER_1, PLAYER_2, NULL,\
     DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT, Rules, BOAT_CARRIER,\
     BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, BOAT_DESTROYER
@@ -17,6 +17,21 @@ class Game():
         self.selected_boat_type = BOAT_CARRIER
         self.grid_scale = grid_scale
         self.enable_borders = enable_borders
+        self.local = True
+        self.is_host = True
+        self.server = None
+        self.client = None
+        self.thread = None
+    
+    def initHost(self):
+        self.server = networking.createServer()
+        self.local = False
+        self.client = networking.searchClient(self.server, self)
+    
+    def initClient(self, host):
+        self.client = networking.initClientConnection(host, self)
+        self.local = False
+        self.is_host = False
     
     """
     Est-ce que quelqu'un a gagne ?
@@ -119,6 +134,7 @@ class Game():
                     self.selected_boat_type = BOAT_SUBMARINE
                 elif (pos_y > 65 and pos_y < 120):
                     self.selected_boat_type = BOAT_DESTROYER
+            self.sync()
             return
         if (self.is_placing):
             self.place_boat_at(self.selected_boat_type, mouse_x, mouse_y)
@@ -128,6 +144,7 @@ class Game():
                 else:
                     self.turn = PLAYER_1
                     self.is_placing = False
+            self.sync()
             return
         x = self.snap(mouse_x)
         y = self.snap(mouse_y)
@@ -140,6 +157,7 @@ class Game():
         if player.opponent_grid[x][y] != NULL:
             return
         player.attack(other, (x, y))
+        self.sync()
         if (self.is_won() != NULL):
             #FIXME Do Something
             raise NotImplementedError()
@@ -147,6 +165,12 @@ class Game():
             self.turn = PLAYER_2
         else:
             self.turn = PLAYER_1
+        self.sync()
+            
+    def sync(self):
+        if not self.local and not self.client is None:
+            self.client.send(networking.serialize(self))
+            
     """
     Place un bateau pour le joueur actif
     """

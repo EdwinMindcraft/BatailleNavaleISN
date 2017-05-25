@@ -6,7 +6,8 @@ import bataillenavale.colorizer
 import time
 from bataillenavale.engine import DIRECTION_UP, DIRECTION_LEFT, BOAT_CARRIER, \
     DIRECTION_DOWN, BOAT_BATTLESHIP, BOAT_CRUISER, BOAT_SUBMARINE, \
-    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED, PLAYER_1, HIT_DESTROYED
+    BOAT_DESTROYER, HIT_SUCCESS, HIT_MISS, DESTROYED, PLAYER_1, HIT_DESTROYED,\
+    PLAYER_2
 
 
 class Drawer():
@@ -130,31 +131,32 @@ class Drawer():
     
     def drawBoatSelector(self, window, instance):
         carrier_text = self.carrier
-        if (instance.get_current_player().get_boat_count(BOAT_CARRIER) >= instance.rules.get_boat_limit(BOAT_CARRIER)):
+        player = instance.player_1 if self.current_player == PLAYER_1 else instance.player_2
+        if (player.get_boat_count(BOAT_CARRIER) >= instance.rules.get_boat_limit(BOAT_CARRIER)):
             carrier_text = self.carrier_invalid
         elif (instance.selected_boat_type == BOAT_CARRIER):
             carrier_text = self.carrier_selected
         
         battleship_text = self.battleship
-        if (instance.get_current_player().get_boat_count(BOAT_BATTLESHIP) >= instance.rules.get_boat_limit(BOAT_BATTLESHIP)):
+        if (player.get_boat_count(BOAT_BATTLESHIP) >= instance.rules.get_boat_limit(BOAT_BATTLESHIP)):
             battleship_text = self.battleship_invalid
         elif (instance.selected_boat_type == BOAT_BATTLESHIP):
             battleship_text = self.battleship_selected
 
         cruiser_text = self.cruiser
-        if (instance.get_current_player().get_boat_count(BOAT_CRUISER) >= instance.rules.get_boat_limit(BOAT_CRUISER)):
+        if (player.get_boat_count(BOAT_CRUISER) >= instance.rules.get_boat_limit(BOAT_CRUISER)):
             cruiser_text = self.cruiser_invalid
         elif (instance.selected_boat_type == BOAT_CRUISER):
             cruiser_text = self.cruiser_selected
 
         submarine_text = self.submarine
-        if (instance.get_current_player().get_boat_count(BOAT_SUBMARINE) >= instance.rules.get_boat_limit(BOAT_SUBMARINE)):
+        if (player.get_boat_count(BOAT_SUBMARINE) >= instance.rules.get_boat_limit(BOAT_SUBMARINE)):
             submarine_text = self.submarine_invalid
         elif (instance.selected_boat_type == BOAT_SUBMARINE):
             submarine_text = self.submarine_selected
 
         destroyer_text = self.destroyer
-        if (instance.get_current_player().get_boat_count(BOAT_DESTROYER) >= instance.rules.get_boat_limit(BOAT_DESTROYER)):
+        if (player.get_boat_count(BOAT_DESTROYER) >= instance.rules.get_boat_limit(BOAT_DESTROYER)):
             destroyer_text = self.destroyer_invalid
         elif (instance.selected_boat_type == BOAT_DESTROYER):
             destroyer_text = self.destroyer_selected
@@ -176,14 +178,18 @@ class Drawer():
     #Dessine le terrain de jeu (bateau + effets)
     def drawBoard(self, window, instance):
         #On recupere le joueur.
-        if (self.current_player != instance.turn):
+        if not instance.local:
+            self.current_player = PLAYER_1 if instance.is_host else PLAYER_2
+            if instance.turn != self.current_player:
+                instance.locked = True
+            else:
+                instance.locked = False
+        elif (self.current_player != instance.turn):
             if (self.lastTime == -1):
                 self.lastTime = time.time()
-                print("Time : " + str(self.lastTime))
                 instance.locked = True
-            if (self.lastTime + 5 < time.time()):
+            if (self.lastTime + 2 < time.time()):
                 self.lastTime = -1
-                print ("Updating screen : " + str(time.time()))
                 self.current_player = instance.turn
                 instance.locked = False
         player = instance.player_1 if self.current_player == PLAYER_1 else instance.player_2

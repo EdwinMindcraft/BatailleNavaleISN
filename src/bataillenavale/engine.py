@@ -206,12 +206,15 @@ class Player():
             return
         if position[1] < 0 or position[1] > 9:
             return
-        attack = other.handle_attack(position);
+        attack = other.handle_attack(position)
+        print(attack)
         if attack[0] == HIT_DESTROYED:
             for loc in attack[1]:
                 self.opponent_grid[loc[0]][loc[1]] = HIT_DESTROYED
         else:
             self.opponent_grid[position[0]][position[1]] = attack[0]
+        for row in self.opponent_grid:
+            print(row)
     
     """
     On gere l'attaque du cote de la personne qui se fait attaquer.
@@ -240,13 +243,16 @@ class Player():
                 elif direction == DIRECTION_RIGHT:
                     x_offset = 1
                 destroyed = True;
+                isContained = False
                 locs = []
                 for i in range(0, 5):
                     newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
+                    if newLoc == position:
+                        isContained = True
                     locs.append(newLoc)
                     if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
                         destroyed = False;
-                if destroyed:
+                if destroyed and isContained:
                     return (HIT_DESTROYED, locs)
             #Battleship
             for pos in self.battleship_pos:
@@ -263,13 +269,16 @@ class Player():
                 elif direction == DIRECTION_RIGHT:
                     x_offset = 1
                 destroyed = True;
+                isContained = False
                 locs = []
                 for i in range(0, 4):
                     newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
                     locs.append(newLoc)
+                    if newLoc == position:
+                        isContained = True
                     if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
                         destroyed = False;
-                if destroyed:
+                if destroyed and isContained:
                     return (HIT_DESTROYED, locs)
             #Cruiser
             for pos in self.cruiser_pos:
@@ -286,13 +295,16 @@ class Player():
                 elif direction == DIRECTION_RIGHT:
                     x_offset = 1
                 destroyed = True;
+                isContained = False
                 locs = []
                 for i in range(0, 3):
                     newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
                     locs.append(newLoc)
+                    if newLoc == position:
+                        isContained = True
                     if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
                         destroyed = False;
-                if destroyed:
+                if destroyed and isContained:
                     return (HIT_DESTROYED, locs)
             #Submarine
             for pos in self.submarine_pos:
@@ -309,13 +321,16 @@ class Player():
                 elif direction == DIRECTION_RIGHT:
                     x_offset = 1
                 destroyed = True;
+                isContained = False
                 locs = []
                 for i in range(0, 3):
                     newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
                     locs.append(newLoc)
+                    if newLoc == position:
+                        isContained = True
                     if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
                         destroyed = False;
-                if destroyed:
+                if destroyed and isContained:
                     return (HIT_DESTROYED, locs)
             #Destroyer
             for pos in self.destroyer_pos:
@@ -332,13 +347,16 @@ class Player():
                 elif direction == DIRECTION_RIGHT:
                     x_offset = 1
                 destroyed = True;
+                isContained = False
                 locs = []
                 for i in range(0, 2):
                     newLoc = (location[0] + (x_offset * i), location[1] + (y_offset * i))
                     locs.append(newLoc)
+                    if newLoc == position:
+                        isContained = True
                     if not self.grid[newLoc[0]][newLoc[1]] == DESTROYED:
                         destroyed = False;
-                if destroyed:
+                if destroyed and isContained:
                     return (HIT_DESTROYED, locs)
                 
             return (HIT_SUCCESS, [])
