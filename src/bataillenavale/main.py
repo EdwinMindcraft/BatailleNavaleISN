@@ -5,10 +5,10 @@ from pygame.constants import *
 from bataillenavale import engine
 from bataillenavale import game
 from bataillenavale.drawer import Drawer
-from bataillenavale.engine import PLAYER_1
+from bataillenavale.engine import PLAYER_1, NULL
 
 
-def run_game(local=True, host=True, host_name=socket.gethostname(), launcher=None):
+def run_game(local=True, host=True, host_name=socket.gethostname()):
     
     render_offset = (10, 60)
     place_grid_position = (10, 560)
@@ -40,13 +40,13 @@ def run_game(local=True, host=True, host_name=socket.gethostname(), launcher=Non
     #On nomme la fenetre
     pygame.display.set_caption("Bataille Navale")
     #On y met une icone
-    pygame.display.set_icon(pygame.image.load("drawables/bato.jpg"))
+    pygame.display.set_icon(pygame.image.load("drawables/icon.png"))
     
     #Variable de fermeture
     should_close = False
     
     #On charge l'arriere plan.
-    bg = pygame.image.load("drawables/mer.jpg").convert()
+    bg = pygame.image.load("drawables/background.png").convert()
     #On lui donne la taille de la fenetre
     bg = pygame.transform.scale(bg, window.get_size())
     
@@ -61,7 +61,7 @@ def run_game(local=True, host=True, host_name=socket.gethostname(), launcher=Non
     prev_mouse_y = 0
     
     #On creer le drawer, celui qui contient la majorite des choses a dessiner
-    drawer = Drawer(instance, render_offset, place_grid_position)
+    drawer = Drawer(instance, render_offset, place_grid_position, window)
     #On charge les lettres et les chiffres.
     drawables = [0]*22
     
@@ -92,38 +92,38 @@ def run_game(local=True, host=True, host_name=socket.gethostname(), launcher=Non
     
     #Ici on met a jour la fenetre.
     while not should_close:
-        if not launcher is None and not instance.client is None:
-            launcher.destroy()
-            launcher = None
         window.blit(bg, (0, 0)) #On dessine l'arriere plan
-        if (instance.turn == PLAYER_1):
-            window.blit(drawables[20], ((window.get_size()[0] - drawables[20].get_width()) / 2, 10))
+        if instance.victor == NULL:
+            if (instance.turn == PLAYER_1):
+                window.blit(drawables[20], ((window.get_size()[0] - drawables[20].get_width()) / 2, 10))
+            else:
+                window.blit(drawables[21], ((window.get_size()[0] - drawables[21].get_width()) / 2, 10))            
+            
+            #On ecrit les lettres et les chiffres sur les 2 grilles
+            for i in range(0, 10):
+                window.blit(drawables[i], (render_offset[0], render_offset[1] + instance.cube_size() * (i + 1)))
+                window.blit(drawables[i], (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * (i + 1)))
+                
+                window.blit(drawables[10 + i], (render_offset[0] + instance.cube_size() * (i + 1), render_offset[1]))
+                window.blit(drawables[10 + i], (render_offset[0] * 3 + grid_size + instance.cube_size() * (i + 1), render_offset[1]))
+    
+            #On dessine le bateau selectionne si la souris est sur la premiere grille et que l'on est dans le mode initialisation
+            if (instance.is_placing and prev_mouse_x - render_offset[0] > 0 and prev_mouse_x - render_offset[0] < grid_size and prev_mouse_y -render_offset[1] > 0 and prev_mouse_y - render_offset[1] < grid_size):
+                drawer.drawBoatAtPosition(prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)
+            
+            #On dessine les bateaus sur la grille.
+            drawer.drawBoard()
+            #On dessine la grille de selection des bateaus
+            drawer.drawBoatSelector()
+            #On dessine les lignes qui limite les cases des grilles
+            for i in range(0, grid_size + 1, instance.cube_size()):
+                window.blit(line_vert, (render_offset[0] + i, render_offset[1]))
+                window.blit(line_hori, (render_offset[0], render_offset[1] + i))
+                
+                window.blit(line_vert, (render_offset[0] * 3 + grid_size + i, render_offset[1]))
+                window.blit(line_hori, (render_offset[0] * 3 + grid_size, render_offset[1] + i))
         else:
-            window.blit(drawables[21], ((window.get_size()[0] - drawables[21].get_width()) / 2, 10))            
-        
-        #On ecrit les lettres et les chiffres sur les 2 grilles
-        for i in range(0, 10):
-            window.blit(drawables[i], (render_offset[0], render_offset[1] + instance.cube_size() * (i + 1)))
-            window.blit(drawables[i], (render_offset[0] * 3 + grid_size, render_offset[1] + instance.cube_size() * (i + 1)))
-            
-            window.blit(drawables[10 + i], (render_offset[0] + instance.cube_size() * (i + 1), render_offset[1]))
-            window.blit(drawables[10 + i], (render_offset[0] * 3 + grid_size + instance.cube_size() * (i + 1), render_offset[1]))
-
-        #On dessine le bateau selectionne si la souris est sur la premiere grille et que l'on est dans le mode initialisation
-        if (instance.is_placing and prev_mouse_x - render_offset[0] > 0 and prev_mouse_x - render_offset[0] < grid_size and prev_mouse_y -render_offset[1] > 0 and prev_mouse_y - render_offset[1] < grid_size):
-            drawer.drawBoatAtPosition(window, prev_mouse_x, prev_mouse_y, instance.selected_boat_type, instance.rotation)
-        
-        #On dessine les bateaus sur la grille.
-        drawer.drawBoard(window, instance)
-        #On dessine la grille de selection des bateaus
-        drawer.drawBoatSelector(window, instance)
-        #On dessine les lignes qui limite les cases des grilles
-        for i in range(0, grid_size + 1, instance.cube_size()):
-            window.blit(line_vert, (render_offset[0] + i, render_offset[1]))
-            window.blit(line_hori, (render_offset[0], render_offset[1] + i))
-            
-            window.blit(line_vert, (render_offset[0] * 3 + grid_size + i, render_offset[1]))
-            window.blit(line_hori, (render_offset[0] * 3 + grid_size, render_offset[1] + i))
+            drawer.drawVictoryScreen()
         
         #On regarge les evenements que la fenetre recois (Clics, Mouvements de souris...)
         for event in pygame.event.get():

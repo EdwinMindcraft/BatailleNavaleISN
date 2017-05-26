@@ -22,6 +22,7 @@ class Game():
         self.server = None
         self.client = None
         self.thread = None
+        self.victor = NULL
     
     def initHost(self):
         self.server = networking.createServer()
@@ -36,13 +37,11 @@ class Game():
     """
     Est-ce que quelqu'un a gagne ?
     """
-    def is_won(self):
+    def check_win(self):
         if self.player_1.has_boat_left() and not self.player_2.has_boat_left():
-            return PLAYER_1
+            self.victor = PLAYER_1
         elif not self.player_1.has_boat_left() and self.player_2.has_boat_left():
-            return PLAYER_2
-        else:
-            return NULL
+            self.victor = PLAYER_2
     """
     Quel joueur est en train de jouer ?
     """
@@ -157,10 +156,9 @@ class Game():
         if player.opponent_grid[x][y] != NULL:
             return
         player.attack(other, (x, y))
-        self.sync()
-        if (self.is_won() != NULL):
-            #FIXME Do Something
-            raise NotImplementedError()
+        self.check_win()
+        if self.victor != NULL:
+            self.locked = True
         if self.turn == PLAYER_1:
             self.turn = PLAYER_2
         else:

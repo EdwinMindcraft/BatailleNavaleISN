@@ -383,3 +383,13 @@ class Player():
                 if self.grid[x][y] == BOAT:
                     return True
         return False
+    
+    def __str__(self):
+        grid = ""
+        for i in self.grid:
+            grid += str(i) + "\n"
+        grid += "\n"
+        for i in self.opponent_grid:
+            grid += str(i) + "\n"
+        return grid
+        

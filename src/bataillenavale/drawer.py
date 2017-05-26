@@ -15,13 +15,14 @@ class Drawer():
     #render_offset: Decalage des grilles par rapport au haut de la fenetre (format: x, y)
     #boat_selector_pos: Decalage du panneau de selection des bateaux par rapport au haut de la fenetre (format: x, y)
     
-    def __init__(self, instance, render_offset, boat_selector_pos):
+    def __init__(self, instance, render_offset, boat_selector_pos, window):
         #Declaration de variable
         self.instance = instance
         self.render_offset = render_offset
         self.boat_selector_pos = boat_selector_pos
         self.lastTime = -1;
         self.current_player = PLAYER_1
+        self.window = window
         
         #Creation des image
         #Porte-Avion
@@ -85,7 +86,13 @@ class Drawer():
         #Surface pour le selecteur
         self.selector = Surface((1020, 400), pygame.SRCALPHA, 32).convert_alpha()
         
-    
+        self.victoryBase = pygame.image.load("drawables/background.png").convert()
+        self.victoryBase = pygame.transform.scale(self.victoryBase, self.window.get_size())
+        
+        self.lost = pygame.image.load("drawables/lost.png").convert_alpha()
+        self.won = pygame.image.load("drawables/won.png").convert_alpha()
+        self.victory_j1 = pygame.image.load("drawables/victory_j1.png").convert_alpha()
+        self.victory_j2 = pygame.image.load("drawables/victory_j2.png").convert_alpha()    
     #Dessine un bateau a la position choisie
     #window: La fenetre du selecteur.
     #mouseX: Position en X de la souris
@@ -93,7 +100,7 @@ class Drawer():
     #boat_type: Type de bateau
     #direction: Orientation du bateau
     
-    def drawBoatAtPosition(self, window, mouseX, mouseY, boat_type, direction):
+    def drawBoatAtPosition(self, mouseX, mouseY, boat_type, direction):
         #Force les postions pour rentrer dans la grille.
         place_pos_x = self.instance.snap(mouseX - self.render_offset[0]) * self.instance.cube_size() + self.render_offset[0] + self.instance.cube_size()
         place_pos_y = self.instance.snap(mouseY - self.render_offset[1]) * self.instance.cube_size() + self.render_offset[1] + self.instance.cube_size()
@@ -101,7 +108,7 @@ class Drawer():
         #Verifie si on peu placer le bateau
         canPlace = self.instance.can_place_boat(boat_type, place_pos_x, place_pos_y - self.instance.cube_size())
         #On dessine le bateau
-        self.draw_int(window, place_pos_x, place_pos_y, boat_type, direction, canPlace)
+        self.draw_int(self.window, place_pos_x, place_pos_y, boat_type, direction, canPlace)
     
     
     #Fonction interne pour dessiner le bateau, evite les positions forces de drawBoatAtPosition
@@ -128,43 +135,43 @@ class Drawer():
     #
     #Ensuite on dessine les bordures, puis les bateaux.
     
-    def drawBoatSelector(self, window, instance):
+    def drawBoatSelector(self):
         carrier_text = self.carrier
-        player = instance.player_1 if self.current_player == PLAYER_1 else instance.player_2
-        if (player.get_boat_count(BOAT_CARRIER) >= instance.rules.get_boat_limit(BOAT_CARRIER)):
+        player = self.instance.player_1 if self.current_player == PLAYER_1 else self.instance.player_2
+        if (player.get_boat_count(BOAT_CARRIER) >= self.instance.rules.get_boat_limit(BOAT_CARRIER)):
             carrier_text = self.carrier_invalid
-        elif (instance.selected_boat_type == BOAT_CARRIER):
+        elif (self.instance.selected_boat_type == BOAT_CARRIER):
             carrier_text = self.carrier_selected
         
         battleship_text = self.battleship
-        if (player.get_boat_count(BOAT_BATTLESHIP) >= instance.rules.get_boat_limit(BOAT_BATTLESHIP)):
+        if (player.get_boat_count(BOAT_BATTLESHIP) >= self.instance.rules.get_boat_limit(BOAT_BATTLESHIP)):
             battleship_text = self.battleship_invalid
-        elif (instance.selected_boat_type == BOAT_BATTLESHIP):
+        elif (self.instance.selected_boat_type == BOAT_BATTLESHIP):
             battleship_text = self.battleship_selected
 
         cruiser_text = self.cruiser
-        if (player.get_boat_count(BOAT_CRUISER) >= instance.rules.get_boat_limit(BOAT_CRUISER)):
+        if (player.get_boat_count(BOAT_CRUISER) >= self.instance.rules.get_boat_limit(BOAT_CRUISER)):
             cruiser_text = self.cruiser_invalid
-        elif (instance.selected_boat_type == BOAT_CRUISER):
+        elif (self.instance.selected_boat_type == BOAT_CRUISER):
             cruiser_text = self.cruiser_selected
 
         submarine_text = self.submarine
-        if (player.get_boat_count(BOAT_SUBMARINE) >= instance.rules.get_boat_limit(BOAT_SUBMARINE)):
+        if (player.get_boat_count(BOAT_SUBMARINE) >= self.instance.rules.get_boat_limit(BOAT_SUBMARINE)):
             submarine_text = self.submarine_invalid
-        elif (instance.selected_boat_type == BOAT_SUBMARINE):
+        elif (self.instance.selected_boat_type == BOAT_SUBMARINE):
             submarine_text = self.submarine_selected
 
         destroyer_text = self.destroyer
-        if (player.get_boat_count(BOAT_DESTROYER) >= instance.rules.get_boat_limit(BOAT_DESTROYER)):
+        if (player.get_boat_count(BOAT_DESTROYER) >= self.instance.rules.get_boat_limit(BOAT_DESTROYER)):
             destroyer_text = self.destroyer_invalid
-        elif (instance.selected_boat_type == BOAT_DESTROYER):
+        elif (self.instance.selected_boat_type == BOAT_DESTROYER):
             destroyer_text = self.destroyer_selected
             
             
         self.selector.blit(Surface((1, 185)), (0, 0))
-        self.selector.blit(Surface((instance.grid_scale * 2 + self.render_offset[0] * 2, 1)), (0, 0))
-        self.selector.blit(Surface((1, 185)), (instance.grid_scale * 2 + self.render_offset[0] * 2, 0))
-        self.selector.blit(Surface((instance.grid_scale * 2 + self.render_offset[0] * 2 + 1, 1)), (0, 185))
+        self.selector.blit(Surface((self.instance.grid_scale * 2 + self.render_offset[0] * 2, 1)), (0, 0))
+        self.selector.blit(Surface((1, 185)), (self.instance.grid_scale * 2 + self.render_offset[0] * 2, 0))
+        self.selector.blit(Surface((self.instance.grid_scale * 2 + self.render_offset[0] * 2 + 1, 1)), (0, 185))
         
         self.selector.blit(carrier_text, (10, 10))
         self.selector.blit(battleship_text, (10, 65))
@@ -172,60 +179,60 @@ class Drawer():
         self.selector.blit(submarine_text, (510, 10))
         self.selector.blit(destroyer_text, (510, 65))
         #On "colle" le selecteur sur la fenetre.
-        window.blit(self.selector, self.boat_selector_pos)
+        self.window.blit(self.selector, self.boat_selector_pos)
     
     #Dessine le terrain de jeu (bateau + effets)
-    def drawBoard(self, window, instance):
+    def drawBoard(self):
         #On recupere le joueur.
-        if not instance.local:
-            self.current_player = PLAYER_1 if instance.is_host else PLAYER_2
-            if instance.turn != self.current_player:
-                instance.locked = True
+        if not self.instance.local:
+            self.current_player = PLAYER_1 if self.instance.is_host else PLAYER_2
+            if self.instance.turn != self.current_player:
+                self.instance.locked = True
             else:
-                instance.locked = False
-        elif (self.current_player != instance.turn):
+                self.instance.locked = False
+        elif (self.current_player != self.instance.turn):
             if (self.lastTime == -1):
                 self.lastTime = time.time()
-                instance.locked = True
+                self.instance.locked = True
             if (self.lastTime + 2 < time.time()):
                 self.lastTime = -1
-                self.current_player = instance.turn
-                instance.locked = False
-        player = instance.player_1 if self.current_player == PLAYER_1 else instance.player_2
+                self.current_player = self.instance.turn
+                self.instance.locked = False
+        player = self.instance.player_1 if self.current_player == PLAYER_1 else self.instance.player_2
         #Si on est en train de placer les bateaux, on affiche les bateaux sur la grille de gauche.
         #Sinon on les affiche sur la grille de droite.
-        offset_x = 0 if instance.is_placing else instance.grid_scale + self.render_offset[0] * 2
+        offset_x = 0 if self.instance.is_placing else self.instance.grid_scale + self.render_offset[0] * 2
         #On dessine les bateaux.
         for pos in player.carrier_pos:
-            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CARRIER, pos[1], True)
+            self.draw_int(self.window, self.render_offset[0] + offset_x + self.instance.cube_size() + pos[0][0] * self.instance.cube_size(), self.render_offset[1] + self.instance.cube_size() + pos[0][1] * self.instance.cube_size(), BOAT_CARRIER, pos[1], True)
         for pos in player.battleship_pos:
-            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_BATTLESHIP, pos[1], True)
+            self.draw_int(self.window, self.render_offset[0] + offset_x + self.instance.cube_size() + pos[0][0] * self.instance.cube_size(), self.render_offset[1] + self.instance.cube_size() + pos[0][1] * self.instance.cube_size(), BOAT_BATTLESHIP, pos[1], True)
         for pos in player.cruiser_pos:
-            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_CRUISER, pos[1], True)
+            self.draw_int(self.window, self.render_offset[0] + offset_x + self.instance.cube_size() + pos[0][0] * self.instance.cube_size(), self.render_offset[1] + self.instance.cube_size() + pos[0][1] * self.instance.cube_size(), BOAT_CRUISER, pos[1], True)
         for pos in player.submarine_pos:
-            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_SUBMARINE, pos[1], True)
+            self.draw_int(self.window, self.render_offset[0] + offset_x + self.instance.cube_size() + pos[0][0] * self.instance.cube_size(), self.render_offset[1] + self.instance.cube_size() + pos[0][1] * self.instance.cube_size(), BOAT_SUBMARINE, pos[1], True)
         for pos in player.destroyer_pos:
-            self.draw_int(window, self.render_offset[0] + offset_x + instance.cube_size() + pos[0][0] * instance.cube_size(), self.render_offset[1] + instance.cube_size() + pos[0][1] * instance.cube_size(), BOAT_DESTROYER, pos[1], True)
+            self.draw_int(self.window, self.render_offset[0] + offset_x + self.instance.cube_size() + pos[0][0] * self.instance.cube_size(), self.render_offset[1] + self.instance.cube_size() + pos[0][1] * self.instance.cube_size(), BOAT_DESTROYER, pos[1], True)
         
         #On passe a travers la grille adverse.
         for x in range(0, len(player.opponent_grid)):
             for y in range(0, len(player.opponent_grid[x])):
-                position = (self.render_offset[0] + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1)));
+                position = (self.render_offset[0] + (self.instance.cube_size() * (x+1)), self.render_offset[1] + (self.instance.cube_size() * (y+1)));
                 #Pour chaque coup reussi, on dessinne une explosion
                 if (player.opponent_grid[x][y] == HIT_SUCCESS):
-                    window.blit(self.hit, position)
+                    self.window.blit(self.hit, position)
                 #Les tirs rates sont representes par une croix
                 elif (player.opponent_grid[x][y] == HIT_MISS):
-                    window.blit(self.miss, position)
+                    self.window.blit(self.miss, position)
                 #Et les bateaux que l'on a detruit s'affiche en flame.
                 elif (player.opponent_grid[x][y] == HIT_DESTROYED):
-                    window.blit(self.destroyed, position)
+                    self.window.blit(self.destroyed, position)
         #On passe a travers notre grille.
         for x in range(0, len(player.grid)):
             for y in range(0, len(player.grid[x])):
                 #Si la case a pris un coup, on met des flammes.
                 if (player.grid[x][y] == DESTROYED):
-                    window.blit(self.destroyed, (self.render_offset[0] * 3 + instance.grid_scale + (instance.cube_size() * (x+1)), self.render_offset[1] + (instance.cube_size() * (y+1))))
+                    self.window.blit(self.destroyed, (self.render_offset[0] * 3 + self.instance.grid_scale + (self.instance.cube_size() * (x+1)), self.render_offset[1] + (self.instance.cube_size() * (y+1))))
                     
     #Cette methode permet de ne pas perdre 300 ans a reecrire 20000 fois les memes lignes de code.
     #Elle permet d'obtenir facilement la texture d'un bateau.
@@ -240,4 +247,17 @@ class Drawer():
             return self.submarine if valid else self.submarine_invalid
         elif (boat_type == BOAT_DESTROYER):
             return self.destroyer if valid else self.destroyer_invalid
-
+        
+    def drawVictoryScreen(self):
+        self.window.blit(self.victoryBase, (0, 0))
+        if not self.instance.local:
+            wincon = (self.instance.is_host and self.instance.victor == PLAYER_1) or (not self.instance.is_host and self.instance.victor == PLAYER_2)
+            if (wincon):
+                self.window.blit(self.won, ((self.window.get_size()[0] - self.won.get_width()) / 2, (self.window.get_size()[1] - self.won.get_height()) / 2))
+            else:
+                self.window.blit(self.lost, ((self.window.get_size()[0] - self.lost.get_width()) / 2, (self.window.get_size()[1] - self.lost.get_height()) / 2))
+        else:
+            if self.instance.victor == PLAYER_1:
+                self.window.blit(self.victory_j1, ((self.window.get_size()[0] - self.victory_j1.get_width()) / 2, (self.window.get_size()[1] - self.victory_j1.get_height()) / 2))
+            else:
+                self.window.blit(self.victory_j2, ((self.window.get_size()[0] - self.victory_j2.get_width()) / 2, (self.window.get_size()[1] - self.victory_j2.get_height()) / 2))

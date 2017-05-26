@@ -21,8 +21,9 @@ class Deserializer(Thread):
     def run(self):
         while not self._killed:
             text = self.client.recv(32768)
-            print(':'.join(hex(x) for x in text))
             deserialize(text, self.instance)
+            if not self.instance.is_placing:
+                self.instance.check_win()
             
     def kill(self):
         self._killed = True
@@ -82,7 +83,6 @@ def _boatPosToString(val):
         elif direction == DIRECTION_RIGHT:
             dirValue = 3
         text += chr(dirValue)
-    print ("Boat using", len(text), "bytes")
     return text
 
 def serialize(instance):
@@ -99,7 +99,6 @@ def serialize(instance):
     if instance.turn == PLAYER_2:
         b |= 0x2
     text += chr(b)
-    print(':'.join(hex(x.encode()[0]) for x in text))
     return text.encode()
 
 def deserialize(rawBytes, instance):
@@ -127,8 +126,6 @@ Genere un texte illisible pour l'homme contenant toute les informations sur un j
 """
 def serializePlayer(player):
     text = ""
-    charUsed = 0
-    char = 0
     for rows in player.opponent_grid:
         for num in rows:
             digit = 0
@@ -140,17 +137,7 @@ def serializePlayer(player):
                 digit = 2
             elif num == HIT_DESTROYED:
                 digit = 3
-            
-            char = char | (digit << (charUsed * 2))
-            charUsed += 1
-            if charUsed > 1:
-                text += chr(char)
-                charUsed = 0
-                char = 0
-    text += chr(char)
-    char = 0
-    charUsed = 0
-    print ("Used", len(text), "bytes")
+            text += chr(digit)
     
     for rows in player.grid:
         for num in rows:
@@ -161,17 +148,7 @@ def serializePlayer(player):
                 digit = 1
             elif num == DESTROYED:
                 digit = 2
-            
-            char = char | (digit << (charUsed * 2))
-            charUsed += 1
-            if charUsed > 1:
-                text += chr(char)
-                charUsed = 0
-                char = 0
-    
-    text += chr(char)
-    char = 0
-    charUsed = 0
+            text += chr(digit)
     
     text += _intToString(player.rules.carrier_count)
     text += _intToString(player.rules.battleship_count)
@@ -194,7 +171,6 @@ def serializePlayer(player):
     return text
 
 def _extractIntFromBytes(abyte):
-    print (abyte[0], abyte[1], abyte[2], abyte[3], abyte[4], abyte[5], abyte[6], abyte[7])
     i = abyte[0] | (abyte[1] << 4) | (abyte[2] << 8) | (abyte[3] << 12) | (abyte[4] << 16) | (abyte[5] << 20) | (abyte[6] << 24) | (abyte[7] << 28)
     del abyte[0]
     del abyte[0]
@@ -208,7 +184,6 @@ def _extractIntFromBytes(abyte):
 
 def _extractBoatPosFromBytes(abyte):
     count = _extractIntFromBytes(abyte)
-    print("Count :", count)
     ls = []
     for i in range(count):
         locX = abyte[0]
@@ -227,18 +202,14 @@ def _extractBoatPosFromBytes(abyte):
             direction = DIRECTION_LEFT
         elif rawDir == 3:
             direction = DIRECTION_RIGHT
-        print (i, (location, direction))
         ls.append((location, direction))
     return ls
 
 def deserializePlayer(abyte):
     player = Player()
-    sz = len(abyte)
-    charUsed = 0
     for rows in range(10):
         for num in range(10):
-            byte = abyte[0] & (0x3 << (2 * charUsed))
-            print(byte)
+            byte = abyte[0]
             state = NULL
             if byte == 0:
                 state = NULL
@@ -249,18 +220,12 @@ def deserializePlayer(abyte):
             elif byte == 3:
                 state = HIT_DESTROYED
             player.opponent_grid[rows][num] = state
-            charUsed += 1
-            if charUsed > 1:
-                del abyte[0]
-                charUsed = 0
+            del abyte[0]
                 
-    del abyte[0]
-    charUsed = 0
-    print ("Used", sz - len(abyte), "bytes")
     
     for rows in range(10):
         for num in range(10):
-            byte = abyte[0] & (0x3 << (2 * charUsed))
+            byte = abyte[0]
             state = NULL
             if byte == 0:
                 state = NULL
@@ -269,14 +234,8 @@ def deserializePlayer(abyte):
             elif byte == 2:
                 state = DESTROYED
             player.grid[rows][num] = state
-            charUsed += 1
-            if charUsed > 1:
-                del abyte[0]
-                charUsed = 0
+            del abyte[0]
                 
-    del abyte[0]
-    charUsed = 0
-    print (len(abyte), "bytes remaining...")
     player.rules.carrier_count = _extractIntFromBytes(abyte)
     player.rules.battleship_count = _extractIntFromBytes(abyte)
     player.rules.cruiser_count = _extractIntFromBytes(abyte)
