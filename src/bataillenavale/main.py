@@ -128,6 +128,10 @@ def run_game(local=True, host=True, host_name=socket.gethostname()):
         #On regarge les evenements que la fenetre recois (Clics, Mouvements de souris...)
         for event in pygame.event.get():
             if event.type == QUIT: #Si l'evenement est fermer la fenetre (la croix)...
+                if not instance.client is None:
+                    instance.client.close()
+                if not instance.server is None:
+                    instance.server.close()
                 should_close = True #...on arrete la boucle, donc on termine le programme
             if event.type == MOUSEMOTION: #Si l'evenement est un mouvement de souris...
                 #...on stocke la nouvelle position de la souris
